@@ -1,0 +1,12 @@
+---
+import Base from '../layouts/Base.astro';
+import PageTitle from '../components/PageTitle.astro';
+---
+
+<Base title="Page introuvable" current="autre" noindex>
+  <PageTitle slot="masthead" title="Page introuvable" seed={404} small />
+  <section class="wrap" style="padding-block: 72px 112px">
+    <p class="body">Cette page n’existe pas ou a été déplacée.</p>
+    <p><a class="btn" href="/">Retour à l’accueil</a></p>
+  </section>
+</Base>
