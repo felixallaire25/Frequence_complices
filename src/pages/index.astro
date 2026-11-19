@@ -9,7 +9,7 @@ import HeroShader from '../components/HeroShader.astro';
   <div slot="masthead" class="hero">
     <div class="hero-spacer" aria-hidden="true"></div>
     <div class="hero-title wrap">
-      <h1>Fréquences<br />Complices</h1>
+      <h1 data-onde="titre">Fréquences<br />Complices</h1>
       <p class="muted">Un espace complice, accessible et conscient, pour la création et le lien.</p>
     </div>
   </div>
@@ -17,15 +17,15 @@ import HeroShader from '../components/HeroShader.astro';
   <section class="wrap sections">
     <nav aria-label="Sections du site">
       <a class="row" href="/a-propos/">
-        <span class="rt">À propos</span>
+        <span class="rt" data-onde="survol">À propos</span>
         <span class="rm">Notre manifeste</span>
       </a>
       <a class="row" href="/evenements/">
-        <span class="rt">Événements</span>
+        <span class="rt" data-onde="survol">Événements</span>
         <span class="rm">Dates à venir et éditions passées</span>
       </a>
       <a class="row" href="/productions/">
-        <span class="rt">Productions</span>
+        <span class="rt" data-onde="survol">Productions</span>
         <span class="rm">Podcast, documentaire, événements</span>
       </a>
     </nav>
