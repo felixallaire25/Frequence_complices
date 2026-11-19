@@ -1,0 +1,179 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import PageTitle from '../../components/PageTitle.astro';
+import WaveBand from '../../components/WaveBand.astro';
+import { CATEGORIES, dateProduction, productionsPubliees, type Categorie } from '../../lib/productions';
+
+const toutes = await productionsPubliees();
+const categories = (Object.keys(CATEGORIES) as Categorie[]).map((cle, i) => ({
+  cle,
+  nom: CATEGORIES[cle],
+  items: toutes.filter((p) => p.data.categorie === cle),
+  seed: 11 + i * 7,
+}));
+const compte = (n: number) => (n > 1 ? `${n} productions` : '1 production');
+---
+
+<Base
+  title="Productions"
+  current="productions"
+  description="Les productions de Fréquences Complices : podcast, documentaire, événements."
+>
+  <PageTitle slot="masthead" title="Productions" seed={4} />
+
+  <section class="wrap cartes" aria-label="Catégories">
+    {
+      categories.map((c) => {
+        const Tag = c.items.length ? 'a' : 'article';
+        return (
+          <Tag class="carte" href={c.items.length ? `#${c.cle}` : undefined}>
+            <WaveBand seed={c.seed} height={260} lines={9} class="carte-ondes" />
+            <h2>{c.nom}</h2>
+            <p>{c.items.length ? compte(c.items.length) : 'Bientôt'}</p>
+          </Tag>
+        );
+      })
+    }
+  </section>
+
+  {
+    categories
+      .filter((c) => c.items.length)
+      .map((c) => (
+        <section class="wrap liste" id={c.cle} aria-labelledby={`titre-${c.cle}`}>
+          <h2 class="h2" id={`titre-${c.cle}`}>
+            {c.nom}
+          </h2>
+          <ul>
+            {c.items.map((p) => (
+              <li>
+                <a class="item" href={`/productions/${p.id}/`}>
+                  {p.data.image ? (
+                    <Image
+                      src={p.data.image}
+                      alt={p.data.image_description ?? ''}
+                      widths={[400, 700]}
+                      sizes="(min-width: 860px) 33vw, 100vw"
+                      class="vignette"
+                    />
+                  ) : (
+                    <div class="vignette vignette-vide">
+                      <WaveBand seed={[...p.id].reduce((n, ch) => n + ch.charCodeAt(0), 0)} height={200} lines={7} />
+                    </div>
+                  )}
+                  <span class="titre">{p.data.titre}</span>
+                  {dateProduction(p) && <span class="meta">{dateProduction(p)}</span>}
+                  {p.data.resume && <span class="resume">{p.data.resume}</span>}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+  }
+  <div class="fin" aria-hidden="true"></div>
+</Base>
+
+<style>
+  .cartes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+    gap: 24px;
+    padding-block: 72px 24px;
+  }
+  .carte {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 460px;
+    padding: 28px;
+    background: var(--noir);
+    color: var(--beige);
+    overflow: hidden;
+    text-decoration: none;
+  }
+  .carte :global(.carte-ondes) {
+    position: absolute;
+    inset: 0 0 auto 0;
+  }
+  .carte h2 {
+    position: relative;
+    margin: 0;
+    font-family: var(--f-titre);
+    font-weight: 600;
+    font-size: 44px;
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+  .carte p {
+    position: relative;
+    margin: 12px 0 0;
+    font-family: var(--f-date);
+    font-size: 18px;
+    color: var(--gris-sur-noir);
+  }
+  a.carte:hover h2 {
+    text-decoration: underline;
+    text-decoration-thickness: 3px;
+    text-underline-offset: 6px;
+  }
+  a.carte:focus-visible {
+    outline-color: var(--noir);
+  }
+
+  .liste {
+    padding-block: 72px 0;
+  }
+  .liste ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
+    gap: 40px 24px;
+    margin: 28px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    text-decoration: none;
+  }
+  .vignette {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    margin-bottom: 8px;
+  }
+  .vignette-vide {
+    position: relative;
+    overflow: hidden;
+    background: var(--noir);
+  }
+  .titre {
+    font-family: var(--f-titre);
+    font-weight: 600;
+    font-size: 28px;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+  .item:hover .titre {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+  }
+  .meta {
+    font-family: var(--f-date);
+    font-size: 16px;
+    color: var(--gris-sur-beige);
+  }
+  .resume {
+    font-size: 18px;
+    line-height: 1.45;
+  }
+  .fin {
+    height: 96px;
+  }
+</style>

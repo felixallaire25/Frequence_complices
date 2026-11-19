@@ -1,0 +1,145 @@
+---
+/**
+ * Lecteur Vimeo, YouTube, SoundCloud ou Spotify chargé seulement au clic.
+ * Avant le clic, aucune connexion n'est faite vers la plateforme
+ * (donc aucun cookie tiers) : on affiche un bouton et un lien direct.
+ */
+interface Props {
+  url: string;
+  titre: string;
+}
+const { url, titre } = Astro.props;
+
+type Media = { plateforme: string; src: string; ratio?: string; hauteur?: number; verbe: string };
+
+function analyser(lien: string): Media | null {
+  let u: URL;
+  try {
+    u = new URL(lien);
+  } catch {
+    return null;
+  }
+  const host = u.hostname.replace(/^www\./, '');
+  const segments = u.pathname.split('/').filter(Boolean);
+
+  if (host === 'vimeo.com' || host === 'player.vimeo.com') {
+    const id = segments.find((s) => /^\d+$/.test(s));
+    const hash = segments[segments.indexOf(id ?? '') + 1];
+    if (!id) return null;
+    const h = hash && /^[0-9a-f]+$/.test(hash) ? `&h=${hash}` : '';
+    return { plateforme: 'Vimeo', src: `https://player.vimeo.com/video/${id}?dnt=1&autoplay=1${h}`, ratio: '16 / 9', verbe: 'Voir' };
+  }
+  if (host === 'youtube.com' || host === 'youtu.be' || host === 'm.youtube.com') {
+    const id = host === 'youtu.be' ? segments[0] : u.searchParams.get('v') ?? segments[1];
+    if (!id) return null;
+    return { plateforme: 'YouTube', src: `https://www.youtube-nocookie.com/embed/${id}?autoplay=1`, ratio: '16 / 9', verbe: 'Voir' };
+  }
+  if (host === 'soundcloud.com' || host === 'on.soundcloud.com') {
+    const playlist = segments.includes('sets');
+    return {
+      plateforme: 'SoundCloud',
+      src: `https://w.soundcloud.com/player/?url=${encodeURIComponent(lien)}&auto_play=true&visual=false&color=%23060606`,
+      hauteur: playlist ? 450 : 166,
+      verbe: 'Écouter',
+    };
+  }
+  if (host === 'open.spotify.com') {
+    const i = segments.findIndex((s) => ['episode', 'show', 'track', 'album', 'playlist'].includes(s));
+    if (i < 0 || !segments[i + 1]) return null;
+    const type = segments[i];
+    return {
+      plateforme: 'Spotify',
+      src: `https://open.spotify.com/embed/${type}/${segments[i + 1]}`,
+      hauteur: type === 'track' ? 152 : type === 'episode' ? 232 : 352,
+      verbe: 'Écouter',
+    };
+  }
+  return null;
+}
+
+const media = analyser(url);
+const style = media?.ratio ? `aspect-ratio:${media.ratio}` : `--h:${media?.hauteur}px`;
+---
+
+{
+  media ? (
+    <div class="embed" data-src={media.src} data-title={`${titre} (lecteur ${media.plateforme})`} style={style}>
+      <div class="facade">
+        <button class="btn" type="button">
+          {media.verbe} sur cette page<span class="visually-hidden"> : {titre}</span>
+        </button>
+        <p>
+          Le lecteur {media.plateforme} ne se charge qu’après ce clic et peut alors déposer des
+          cookies. Vous pouvez aussi{' '}
+          <a href={url} target="_blank" rel="noopener">
+            ouvrir sur {media.plateforme}<span class="visually-hidden"> (nouvel onglet)</span>
+          </a>
+          .
+        </p>
+      </div>
+    </div>
+  ) : (
+    <p>
+      <a class="btn" href={url} target="_blank" rel="noopener">
+        Ouvrir le lien<span class="visually-hidden"> (nouvel onglet)</span>
+      </a>
+    </p>
+  )
+}
+
+<style>
+  .embed {
+    position: relative;
+    width: 100%;
+    max-width: 960px;
+    margin: 0 0 40px;
+    background: var(--noir);
+    color: var(--beige);
+  }
+  .facade {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 12px;
+    height: 100%;
+    padding: 20px 24px;
+  }
+  .facade .btn {
+    background: var(--beige);
+    color: var(--noir);
+  }
+  .facade .btn:hover {
+    background: #fff;
+  }
+  .facade p {
+    margin: 0;
+    max-width: 52ch;
+    font-size: 15px;
+    line-height: 1.45;
+    color: var(--gris-sur-noir);
+  }
+  .embed[style*='--h'] {
+    min-height: var(--h);
+  }
+  .embed :global(iframe) {
+    display: block;
+    width: 100%;
+    height: var(--h, 100%);
+    border: 0;
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.embed[data-src]').forEach((box) => {
+    box.querySelector('button')?.addEventListener('click', () => {
+      const iframe = document.createElement('iframe');
+      iframe.src = box.dataset.src!;
+      iframe.title = box.dataset.title!;
+      iframe.allow = 'autoplay; fullscreen; picture-in-picture; encrypted-media';
+      iframe.allowFullscreen = true;
+      box.replaceChildren(iframe);
+      iframe.focus();
+    });
+  });
+</script>

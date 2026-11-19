@@ -1,0 +1,68 @@
+---
+/** Page d'une production : lecteur (au clic), image, texte. */
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PageTitle from '../../components/PageTitle.astro';
+import MediaEmbed from '../../components/MediaEmbed.astro';
+import { CATEGORIES, dateProduction, productionsPubliees } from '../../lib/productions';
+
+export async function getStaticPaths() {
+  const toutes = await productionsPubliees();
+  return toutes.map((p) => ({ params: { id: p.id }, props: { p } }));
+}
+
+const { p } = Astro.props;
+const { Content } = await render(p);
+const { titre, categorie, resume, image, image_description, media } = p.data;
+const seed = [...p.id].reduce((s, c) => s + c.charCodeAt(0), 0);
+const date = dateProduction(p);
+---
+
+<Base title={titre} current="productions" description={resume ?? `${CATEGORIES[categorie]} — ${titre}`}>
+  <PageTitle slot="masthead" title={titre} seed={seed} small />
+
+  <section class="wrap bloc">
+    <p class="retour"><a href={`/productions/#${categorie}`}>← Productions</a></p>
+    <p class="meta">{CATEGORIES[categorie]}{date && ` · ${date}`}</p>
+
+    {media && <MediaEmbed url={media} titre={titre} />}
+    {
+      image && !media && (
+        <Image
+          src={image}
+          alt={image_description ?? ''}
+          widths={[600, 1000, 1400]}
+          sizes="(min-width: 1000px) 960px, 100vw"
+          class="visuel"
+        />
+      )
+    }
+
+    <div class="prose">
+      <Content />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .bloc {
+    padding-block: 56px 96px;
+  }
+  .retour {
+    margin: 0 0 32px;
+    font-size: 18px;
+  }
+  .meta {
+    margin: 0 0 32px;
+    font-family: var(--f-date);
+    font-size: 18px;
+    color: var(--gris-sur-beige);
+  }
+  .visuel {
+    width: 100%;
+    max-width: 960px;
+    height: auto;
+    margin-bottom: 40px;
+  }
+</style>

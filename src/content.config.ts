@@ -32,9 +32,12 @@ const pages = defineCollection({
   }),
 });
 
+/** Les fichiers dont le nom commence par « _ » sont des modèles, ignorés. */
+const MD = '[!_]*.md';
+
 /** Événements : src/content/evenements/*.md */
 const evenements = defineCollection({
-  loader: glob({ pattern: '*.md', base: './src/content/evenements' }),
+  loader: glob({ pattern: MD, base: './src/content/evenements' }),
   schema: (ctx) =>
     z.object({
       titre: z.string(),
@@ -53,4 +56,32 @@ const evenements = defineCollection({
     }),
 });
 
-export const collections = { pages, evenements };
+/** Catégories de productions, dans l'ordre d'affichage. */
+export const CATEGORIES = {
+  podcast: 'Podcast',
+  documentaire: 'Documentaire',
+  evenements: 'Événements',
+} as const;
+
+/** Productions : src/content/productions/*.md */
+const productions = defineCollection({
+  loader: glob({ pattern: MD, base: './src/content/productions' }),
+  schema: ({ image }) =>
+    z.object({
+      titre: z.string(),
+      /** podcast, documentaire ou evenements */
+      categorie: z.enum(['podcast', 'documentaire', 'evenements']),
+      /** Date de sortie (AAAA-MM-JJ), sert à trier. */
+      date: z.coerce.date().optional(),
+      /** Une phrase de présentation, affichée dans la liste. */
+      resume: z.string().optional(),
+      /** Image de présentation (facultative). */
+      image: image().optional(),
+      image_description: z.string().optional(),
+      /** Lien Vimeo, YouTube, SoundCloud ou Spotify : le lecteur s'affiche sur la page. */
+      media: z.string().optional(),
+      brouillon: z.boolean().default(false),
+    }),
+});
+
+export const collections = { pages, evenements, productions };
