@@ -1,9 +1,10 @@
 ---
 import Base from '../layouts/Base.astro';
+import HeroShader from '../components/HeroShader.astro';
 ---
 
 <Base current="accueil">
-  <div slot="backdrop" class="hero-backdrop" aria-hidden="true"></div>
+  <HeroShader slot="backdrop" />
 
   <Fragment slot="masthead">
     <div class="hero-spacer" aria-hidden="true"></div>
@@ -32,11 +33,6 @@ import Base from '../layouts/Base.astro';
 </Base>
 
 <style>
-  .hero-backdrop {
-    position: absolute;
-    inset: 0 0 auto 0;
-    height: 440px;
-  }
   .hero-spacer {
     height: 340px;
   }
