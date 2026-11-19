@@ -2,7 +2,7 @@
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  // À renseigner quand le nom de domaine sera acheté (sert aux liens absolus) :
-  // site: 'https://[NOM-DE-DOMAINE]',
+  // Adresse publique du site (liens canoniques). À changer avec le futur nom de domaine.
+  site: 'https://frequence-complices.felixallaire25.workers.dev',
   build: { format: 'directory' },
 });
