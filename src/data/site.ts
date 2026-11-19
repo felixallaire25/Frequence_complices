@@ -9,6 +9,12 @@ export const site = {
   email: 'frequencescomplices@gmail.com',
   adresse: '[ADRESSE DE L’ASSO]',
   realisation: 'Félix Allaire',
+  /**
+   * Clé du service d'envoi du formulaire de contact (https://web3forms.com).
+   * À créer avec l'adresse frequencescomplices@gmail.com : la clé n'est pas
+   * secrète, elle indique seulement à Web3Forms où transférer les messages.
+   */
+  web3formsKey: '[CLÉ WEB3FORMS]',
 };
 
 /** Navigation principale (ordre d'affichage). */

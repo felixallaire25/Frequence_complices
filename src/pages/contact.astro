@@ -1,0 +1,151 @@
+---
+import Base from '../layouts/Base.astro';
+import PageTitle from '../components/PageTitle.astro';
+import { site } from '../data/site';
+---
+
+<Base
+  title="Contact"
+  current="contact"
+  description="Écrire à Fréquences Complices : adresse de l’association et formulaire de contact."
+>
+  <PageTitle slot="masthead" title="Contact" seed={5} />
+
+  <section class="wrap contact">
+    <div class="coords">
+      <h2 class="h2">Adresse</h2>
+      <p class="adresse">{site.adresse}</p>
+      <h2 class="h2">E-mail</h2>
+      <p><a class="email" href={`mailto:${site.email}`}>{site.email}</a></p>
+    </div>
+
+    <form
+      class="form"
+      id="contact-form"
+      action="https://api.web3forms.com/submit"
+      method="POST"
+      novalidate
+    >
+      <input type="hidden" name="access_key" value={site.web3formsKey} />
+      <input type="hidden" name="from_name" value="Site Fréquences Complices" />
+      <!-- Piège à robots : invisible pour les humains -->
+      <input type="checkbox" name="botcheck" class="visually-hidden" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+      <div>
+        <label class="lbl" for="email">Votre e-mail <span class="req">(obligatoire, pour pouvoir vous répondre)</span></label>
+        <input class="fld" id="email" name="email" type="email" autocomplete="email" required />
+      </div>
+      <div>
+        <label class="lbl" for="objet">Objet <span class="req">(obligatoire)</span></label>
+        <input class="fld" id="objet" name="subject" type="text" required maxlength="200" />
+      </div>
+      <div>
+        <label class="lbl" for="message">Message <span class="req">(obligatoire)</span></label>
+        <textarea class="fld" id="message" name="message" rows="7" required></textarea>
+      </div>
+      <p class="note">
+        Votre message nous est transmis par le service Web3Forms. Voir la <a href="/confidentialite/">politique de confidentialité</a>.
+      </p>
+      <div>
+        <button class="btn" type="submit">Envoyer le message</button>
+      </div>
+      <p class="status" role="status" aria-live="polite"></p>
+    </form>
+  </section>
+</Base>
+
+<style>
+  .contact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 64px 96px;
+    padding-block: 72px 104px;
+  }
+  .coords {
+    flex: 1 1 300px;
+  }
+  .adresse {
+    margin: 0 0 40px;
+  }
+  .coords p {
+    margin-top: 0;
+  }
+  .email {
+    font-family: var(--f-titre);
+    font-weight: 600;
+    font-size: clamp(24px, 3vw, 40px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    overflow-wrap: anywhere;
+  }
+  .form {
+    flex: 2 1 420px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .req {
+    font-weight: 400;
+    color: var(--gris-sur-beige);
+  }
+  .fld[aria-invalid='true'] {
+    border-width: 3px;
+  }
+  .note {
+    margin: 0;
+    font-size: 16px;
+    color: var(--gris-sur-beige);
+  }
+  .status {
+    margin: 0;
+    font-weight: 600;
+  }
+  .status:empty {
+    display: none;
+  }
+</style>
+
+<script>
+  // Envoi sans quitter la page. Sans JavaScript, le formulaire fonctionne
+  // quand même (Web3Forms affiche alors sa propre page de confirmation).
+  const form = document.querySelector<HTMLFormElement>('#contact-form');
+  if (form) {
+    const status = form.querySelector<HTMLElement>('.status')!;
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+    const fields = [...form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('.fld')];
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      status.textContent = '';
+
+      const invalid = fields.filter((f) => !f.checkValidity());
+      fields.forEach((f) => f.setAttribute('aria-invalid', String(invalid.includes(f))));
+      if (invalid.length) {
+        status.textContent = 'Merci de remplir correctement les champs obligatoires.';
+        invalid[0].focus();
+        return;
+      }
+
+      button.disabled = true;
+      button.textContent = 'Envoi en cours…';
+      try {
+        const response = await fetch(form.action, {
+          method: 'POST',
+          headers: { Accept: 'application/json' },
+          body: new FormData(form),
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || !result.success) throw new Error(result.message);
+        form.reset();
+        fields.forEach((f) => f.removeAttribute('aria-invalid'));
+        status.textContent = 'Merci, votre message a bien été envoyé.';
+      } catch {
+        status.textContent =
+          'L’envoi a échoué. Vous pouvez nous écrire directement à frequencescomplices@gmail.com.';
+      } finally {
+        button.disabled = false;
+        button.textContent = 'Envoyer le message';
+      }
+    });
+  }
+</script>

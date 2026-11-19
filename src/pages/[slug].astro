@@ -1,0 +1,77 @@
+---
+/**
+ * Pages de texte générées à partir de src/content/pages/*.md
+ * (À propos, mentions légales, confidentialité, cookies, et toute nouvelle page).
+ * Le nom du fichier donne l'adresse : a-propos.md → /a-propos/
+ */
+import { getCollection, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PageTitle from '../components/PageTitle.astro';
+import { nav, type NavKey } from '../data/site';
+
+export async function getStaticPaths() {
+  const pages = await getCollection('pages');
+  return pages.map((page) => ({ params: { slug: page.id }, props: { page } }));
+}
+
+const { page } = Astro.props;
+const { Content } = await render(page);
+const current: NavKey = nav.some((n) => n.key === page.id) ? (page.id as NavKey) : 'autre';
+// Graine différente par page pour varier le dessin des ondes
+const seed = [...page.id].reduce((s, c) => s + c.charCodeAt(0), 0);
+const signature = page.data.signature?.split('/').map((l) => l.trim());
+---
+
+<Base title={page.data.title} description={page.data.description} current={current}>
+  <PageTitle slot="masthead" title={page.data.title} seed={seed} />
+
+  <section class="wrap texte">
+    <div class="col">
+      {page.data.intro && <p class="lead">{page.data.intro}</p>}
+      <div class="prose">
+        <Content />
+      </div>
+      {
+        signature && (
+          <p class="signature">
+            {signature.map((line, i) => (
+              <>
+                {i > 0 && <br />}
+                {line}
+              </>
+            ))}
+          </p>
+        )
+      }
+    </div>
+  </section>
+</Base>
+
+<style>
+  .texte {
+    padding-block: 72px 112px;
+  }
+  .col {
+    margin-left: clamp(0px, 16vw, 240px);
+  }
+  .lead {
+    margin: 0 0 32px;
+    max-width: 30ch;
+    font-family: var(--f-titre);
+    font-weight: 500;
+    font-size: clamp(26px, 2.6vw, 36px);
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+  }
+  .prose :global(p) {
+    margin-bottom: 28px;
+  }
+  .signature {
+    margin: 56px 0 0;
+    font-family: var(--f-titre);
+    font-weight: 600;
+    font-size: 28px;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+</style>
