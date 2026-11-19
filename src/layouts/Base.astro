@@ -14,6 +14,7 @@ import texteFont from '@fontsource-variable/instrument-sans/files/instrument-san
 
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import ScrollLine from '../components/ScrollLine.astro';
 import { site, type NavKey } from '../data/site';
 
 interface Props {
@@ -69,6 +70,7 @@ const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : un
     </div>
 
     <SiteFooter />
+    <ScrollLine />
   </body>
 </html>
 
