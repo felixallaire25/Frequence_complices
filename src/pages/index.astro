@@ -6,13 +6,13 @@ import HeroShader from '../components/HeroShader.astro';
 <Base current="accueil">
   <HeroShader slot="backdrop" />
 
-  <Fragment slot="masthead">
+  <div slot="masthead" class="hero">
     <div class="hero-spacer" aria-hidden="true"></div>
     <div class="hero-title wrap">
       <h1>Fréquences<br />Complices</h1>
       <p class="muted">Un espace complice, accessible et conscient, pour la création et le lien.</p>
     </div>
-  </Fragment>
+  </div>
 
   <section class="wrap sections">
     <nav aria-label="Sections du site">
@@ -33,8 +33,16 @@ import HeroShader from '../components/HeroShader.astro';
 </Base>
 
 <style>
+  /* Le bandeau d'accueil occupe exactement la hauteur de l'écran */
+  .hero {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - var(--header-h));
+    min-height: calc(100svh - var(--header-h));
+  }
   .hero-spacer {
-    height: 340px;
+    flex: 1 1 auto;
+    min-height: 120px;
   }
   .hero-title {
     display: flex;
@@ -42,14 +50,15 @@ import HeroShader from '../components/HeroShader.astro';
     align-items: flex-end;
     justify-content: space-between;
     gap: 28px 48px;
-    padding-block: 24px 56px;
+    padding-block: 24px clamp(32px, 6svh, 56px);
   }
   h1 {
     margin: 0;
     flex: 1 1 auto;
     font-family: var(--f-titre);
     font-weight: 600;
-    font-size: clamp(56px, 11.4vw, 172px);
+    /* limité aussi par la hauteur d'écran, pour tout voir sans défiler */
+    font-size: clamp(56px, min(11.4vw, 17svh), 172px);
     line-height: 0.88;
     letter-spacing: -0.04em;
   }

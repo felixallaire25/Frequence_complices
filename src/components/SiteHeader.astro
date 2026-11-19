@@ -36,6 +36,17 @@ const { current } = Astro.props;
   </nav>
 </header>
 
+<script>
+  // Hauteur réelle de l'en-tête (elle varie quand le menu passe à la ligne),
+  // utilisée pour que le bandeau d'accueil tienne pile dans l'écran.
+  const header = document.querySelector<HTMLElement>('.site-header');
+  if (header && 'ResizeObserver' in window) {
+    new ResizeObserver(() => {
+      document.documentElement.style.setProperty('--header-h', `${header.offsetHeight}px`);
+    }).observe(header);
+  }
+</script>
+
 <style>
   .site-header {
     position: relative;

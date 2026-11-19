@@ -25,7 +25,14 @@
 
   /* Mise en page */
   --gouttiere: clamp(20px, 4vw, 56px);
+  --header-h: 104px; /* recalculée en JavaScript */
   --trait: 1.5px solid currentColor;
+}
+
+@media (max-width: 699px) {
+  :root {
+    --header-h: 180px;
+  }
 }
 
 *,
