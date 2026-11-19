@@ -52,32 +52,72 @@ const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : un
   <body>
     <a class="skip-link" href="#contenu">Aller au contenu</a>
 
-    <div class="masthead dark">
-      <slot name="backdrop" />
-      <SiteHeader current={current} />
-      <div class="masthead-content" id="contenu" tabindex="-1">
-        <slot name="masthead" />
+    <div class="page">
+      <!-- Fond noir (ou animation) derrière l'en-tête et le titre de page -->
+      <div class="masthead-bg">
+        <slot name="backdrop" />
       </div>
+      <SiteHeader current={current} />
+      <main>
+        <div class="masthead-content dark" id="contenu" tabindex="-1">
+          <slot name="masthead" />
+        </div>
+        <div class="page-body">
+          <slot />
+        </div>
+      </main>
     </div>
-
-    <main>
-      <slot />
-    </main>
 
     <SiteFooter />
   </body>
 </html>
 
 <style>
-  .masthead {
+  /*
+   * L'en-tête (<header>) et le titre de page (dans <main>) partagent le
+   * même fond noir : une grille place le fond derrière les deux.
+   */
+  .page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
+  }
+  .masthead-bg {
+    grid-row: 1 / 3;
+    grid-column: 1;
     position: relative;
     overflow: hidden;
+    background: var(--noir);
+  }
+  .page > :global(.site-header) {
+    grid-row: 1;
+    grid-column: 1;
+  }
+  main {
+    grid-row: 2 / 4;
+    grid-column: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: subgrid;
   }
   .masthead-content {
     position: relative;
     z-index: 1;
+    background: transparent;
   }
   .masthead-content:focus {
     outline: none;
+  }
+  /* Navigateurs anciens sans subgrid : fond noir simple, sans animation */
+  @supports not (grid-template-rows: subgrid) {
+    main {
+      display: block;
+    }
+    .masthead-bg {
+      grid-row: 1;
+    }
+    .masthead-content {
+      background: var(--noir);
+    }
   }
 </style>

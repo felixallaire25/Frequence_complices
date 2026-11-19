@@ -62,6 +62,20 @@ const mobile = await getImage({ src: posterMobile, format: 'webp', width: 780, q
     );
     pointer-events: none;
   }
+  @media (max-width: 699px) {
+    /* la navigation passe sur deux lignes : fondu du haut plus long */
+    .veil {
+      background: linear-gradient(
+        to bottom,
+        #060606 0,
+        #060606 14%,
+        rgba(6, 6, 6, 0) 30%,
+        rgba(6, 6, 6, 0) 55%,
+        rgba(6, 6, 6, 0.85) 80%,
+        #060606 100%
+      );
+    }
+  }
 </style>
 
 <script>
@@ -92,7 +106,6 @@ const mobile = await getImage({ src: posterMobile, format: 'webp', width: 780, q
         startHero({
           container: box,
           canvas,
-          pointerTarget: box.parentElement ?? box,
           onReady: () => box.classList.add('is-live'),
           onTooSlow: () => box.classList.remove('is-live'),
         });

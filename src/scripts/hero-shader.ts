@@ -13,8 +13,6 @@ import { Renderer, Camera, Geometry, Program, Mesh, Transform } from 'ogl';
 type Options = {
   container: HTMLElement;
   canvas: HTMLCanvasElement;
-  /** Élément qui reçoit les mouvements de souris. */
-  pointerTarget?: HTMLElement;
   /** Appelé au premier rendu (pour faire apparaître le canvas). */
   onReady?: () => void;
   /** Appelé si l'appareil est trop lent : on repasse à l'image. */
@@ -213,7 +211,7 @@ void main(){
 `;
 
 export function startHero(opts: Options) {
-  const { container, canvas, pointerTarget = container, onReady, onTooSlow } = opts;
+  const { container, canvas, onReady, onTooSlow } = opts;
   const smallScreen = () => container.clientWidth < 700;
 
   const renderer = new Renderer({
@@ -362,6 +360,10 @@ export function startHero(opts: Options) {
   function onPointerMove(e: PointerEvent) {
     if (e.pointerType === 'touch') return;
     const r = container.getBoundingClientRect();
+    if (e.clientY < r.top || e.clientY > r.bottom) {
+      target.s = 0;
+      return;
+    }
     const nx = ((e.clientX - r.left) / r.width) * 2 - 1;
     const ny = (e.clientY - r.top) / r.height;
     // approximation simple de l'écran vers le relief
@@ -372,8 +374,8 @@ export function startHero(opts: Options) {
   function onPointerLeave() {
     target.s = 0;
   }
-  pointerTarget.addEventListener('pointermove', onPointerMove);
-  pointerTarget.addEventListener('pointerleave', onPointerLeave);
+  window.addEventListener('pointermove', onPointerMove, { passive: true });
+  document.documentElement.addEventListener('pointerleave', onPointerLeave);
 
   // ---- Boucle d'animation ----
   let raf = 0;
@@ -440,8 +442,8 @@ export function startHero(opts: Options) {
     io.disconnect();
     ro.disconnect();
     document.removeEventListener('visibilitychange', onVisibility);
-    pointerTarget.removeEventListener('pointermove', onPointerMove);
-    pointerTarget.removeEventListener('pointerleave', onPointerLeave);
+    window.removeEventListener('pointermove', onPointerMove);
+    document.documentElement.removeEventListener('pointerleave', onPointerLeave);
     gl.getExtension('WEBGL_lose_context')?.loseContext();
   }
 
