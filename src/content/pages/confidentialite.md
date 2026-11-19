@@ -1,5 +1,5 @@
 ---
-title: Politique de confidentialité
+titre: Politique de confidentialité
 ---
 
 *Texte à fournir par l’association.*

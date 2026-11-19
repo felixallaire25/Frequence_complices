@@ -1,0 +1,61 @@
+---
+import { Image } from 'astro:assets';
+import { dernierJour, type Evenement } from '../lib/evenements';
+
+interface Props {
+  e: Evenement;
+  /** Caché au départ (événement encore à venir au moment de la publication). */
+  hidden?: boolean;
+}
+const { e, hidden = false } = Astro.props;
+const { titre, date, photos } = e.data;
+const couverture = photos[0];
+const annee = date.getUTCFullYear();
+---
+
+<li class="past" data-fin={dernierJour(e)} hidden={hidden}>
+  <a href={`/evenements/${e.id}/`}>
+    {
+      couverture ? (
+        <Image
+          src={couverture.image}
+          alt={couverture.description ?? ''}
+          widths={[400, 700, 1000]}
+          sizes="(min-width: 860px) 50vw, 100vw"
+          class="img"
+        />
+      ) : (
+        <div class="ph img" />
+      )
+    }
+    <span class="cap">{titre}, {annee}</span>
+  </a>
+</li>
+
+<style>
+  .past a {
+    display: block;
+    text-decoration: none;
+  }
+  .img {
+    width: 100%;
+    height: auto;
+    transition: opacity 0.2s;
+  }
+  .ph.img {
+    aspect-ratio: 4 / 3;
+  }
+  .past a:hover .img {
+    opacity: 0.85;
+  }
+  .cap {
+    display: block;
+    margin-top: 10px;
+    font-size: 17px;
+    color: var(--gris-sur-beige);
+  }
+  .past a:hover .cap {
+    color: var(--noir);
+    text-decoration: underline;
+  }
+</style>

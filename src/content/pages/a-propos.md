@@ -1,5 +1,5 @@
 ---
-title: À propos
+titre: À propos
 description: "Le manifeste de Fréquences Complices : un espace complice, accessible et conscient, au service de la création et du lien."
 intro: Fréquences Complices est né d’un besoin collectif d’être, ensemble, au service de la création et du lien.
 signature: Compliceusement vôtre, / Fréquences Complices

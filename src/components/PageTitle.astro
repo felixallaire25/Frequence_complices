@@ -5,17 +5,24 @@ import WaveBand from './WaveBand.astro';
 interface Props {
   title: string;
   seed?: number;
+  /** Titre plus petit, pour les titres longs (événements, productions). */
+  small?: boolean;
 }
-const { title, seed = 1 } = Astro.props;
+const { title, seed = 1, small = false } = Astro.props;
 ---
 
 <WaveBand seed={seed} height={170} />
 <div class="wrap title">
-  <h1 class="h1-page">{title}</h1>
+  <h1 class:list={['h1-page', { small }]}>{title}</h1>
 </div>
 
 <style>
   .title {
     padding-block: 8px 48px;
+  }
+  .small {
+    font-size: clamp(44px, 6.5vw, 96px);
+    line-height: 0.95;
+    text-wrap: balance;
   }
 </style>

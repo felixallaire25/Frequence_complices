@@ -1,0 +1,139 @@
+---
+/** Page d'un événement : infos pratiques, description, photos. */
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PageTitle from '../../components/PageTitle.astro';
+import { dateLongue, dernierJour, evenementsPublies } from '../../lib/evenements';
+
+export async function getStaticPaths() {
+  const tous = await evenementsPublies();
+  return tous.map((e) => ({ params: { id: e.id }, props: { e } }));
+}
+
+const { e } = Astro.props;
+const { Content } = await render(e);
+const { titre, heure, lieu, inscription, photos } = e.data;
+const lienValide = inscription && /^(https?:|mailto:)/.test(inscription);
+const seed = [...e.id].reduce((s, c) => s + c.charCodeAt(0), 0);
+---
+
+<Base title={titre} current="evenements" description={`${titre}, ${dateLongue(e)}${lieu ? `, ${lieu}` : ''}.`}>
+  <PageTitle slot="masthead" title={titre} seed={seed} small />
+
+  <section class="wrap bloc">
+    <p class="retour"><a href="/evenements/">← Tous les événements</a></p>
+
+    <dl class="infos">
+      <div>
+        <dt>Date</dt>
+        <dd><time datetime={e.data.date.toISOString().slice(0, 10)}>{dateLongue(e)}</time></dd>
+      </div>
+      {
+        heure && (
+          <div>
+            <dt>Heure</dt>
+            <dd>{heure}</dd>
+          </div>
+        )
+      }
+      {
+        lieu && (
+          <div>
+            <dt>Lieu</dt>
+            <dd>{lieu}</dd>
+          </div>
+        )
+      }
+    </dl>
+
+    {
+      lienValide && (
+        <p class="inscription" data-fin={dernierJour(e)}>
+          <a class="btn" href={inscription} target="_blank" rel="noopener">
+            S’inscrire<span class="visually-hidden"> (nouvel onglet)</span>
+          </a>
+        </p>
+      )
+    }
+
+    <div class="prose">
+      <Content />
+    </div>
+  </section>
+
+  {
+    photos.length > 0 && (
+      <section class="wrap photos" aria-labelledby="titre-photos">
+        <h2 class="h2" id="titre-photos">Photos</h2>
+        <ul>
+          {photos.map((p) => (
+            <li>
+              <Image
+                src={p.image}
+                alt={p.description ?? ''}
+                widths={[500, 900, 1400]}
+                sizes="(min-width: 860px) 50vw, 100vw"
+              />
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+</Base>
+
+<style>
+  .bloc {
+    padding-block: 56px 72px;
+  }
+  .retour {
+    margin: 0 0 40px;
+    font-size: 18px;
+  }
+  .infos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px 64px;
+    margin: 0 0 40px;
+  }
+  dt {
+    font-family: var(--f-date);
+    font-size: 16px;
+    color: var(--gris-sur-beige);
+  }
+  dd {
+    margin: 0;
+    font-family: var(--f-titre);
+    font-weight: 600;
+    font-size: clamp(22px, 2.4vw, 30px);
+    line-height: 1.2;
+  }
+  .inscription {
+    margin: 0 0 48px;
+  }
+  .photos {
+    padding-block: 0 96px;
+  }
+  .photos ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(380px, 100%), 1fr));
+    gap: 24px;
+    align-items: start;
+    margin: 28px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .photos img {
+    width: 100%;
+    height: auto;
+  }
+</style>
+
+<script>
+  // Masque le bouton d'inscription une fois la date passée.
+  const today = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Europe/Paris' }).format(new Date());
+  document.querySelectorAll<HTMLElement>('.inscription[data-fin]').forEach((el) => {
+    if (el.dataset.fin! < today) el.hidden = true;
+  });
+</script>

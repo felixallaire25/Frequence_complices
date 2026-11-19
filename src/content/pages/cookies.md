@@ -1,5 +1,5 @@
 ---
-title: Cookies
+titre: Cookies
 ---
 
 *Texte à fournir par l’association.*

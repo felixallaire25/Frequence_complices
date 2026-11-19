@@ -1,0 +1,87 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageTitle from '../../components/PageTitle.astro';
+import EventUpcoming from '../../components/EventUpcoming.astro';
+import EventPast from '../../components/EventPast.astro';
+import { aujourdhui, dernierJour, evenementsPublies } from '../../lib/evenements';
+
+const today = aujourdhui();
+const tous = await evenementsPublies();
+const aVenir = tous.filter((e) => dernierJour(e) >= today);
+const passes = tous.filter((e) => dernierJour(e) < today).reverse();
+---
+
+<Base
+  title="Événements"
+  current="evenements"
+  description="Les prochains événements de Fréquences Complices et les photos des éditions passées."
+>
+  <PageTitle slot="masthead" title="Événements" seed={3} />
+
+  <section class="wrap bloc" aria-labelledby="a-venir">
+    <h2 class="h2" id="a-venir">À venir</h2>
+    <ul class="liste-a-venir" data-liste="a-venir">
+      {aVenir.map((e) => <EventUpcoming e={e} />)}
+    </ul>
+    <p class="vide muted" data-vide="a-venir" hidden={aVenir.length > 0}>
+      Pas d’événement annoncé pour le moment.
+    </p>
+  </section>
+
+  <section class="wrap bloc bloc-passes" aria-labelledby="passes">
+    <h2 class="h2" id="passes">Passés</h2>
+    <ul class="grille-passes" data-liste="passes">
+      {/* Copies cachées des événements à venir : affichées automatiquement une fois la date passée */}
+      {[...aVenir].reverse().map((e) => <EventPast e={e} hidden />)}
+      {passes.map((e) => <EventPast e={e} />)}
+    </ul>
+    <p class="vide muted" data-vide="passes" hidden={passes.length > 0}>
+      Les photos des éditions passées arriveront ici.
+    </p>
+  </section>
+</Base>
+
+<style>
+  .bloc {
+    padding-block: 72px 24px;
+  }
+  .bloc-passes {
+    padding-block: 56px 96px;
+  }
+  ul {
+    margin: 28px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .liste-a-venir {
+    display: grid;
+    gap: 16px;
+  }
+  .grille-passes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(380px, 100%), 1fr));
+    gap: 40px 24px;
+    align-items: start;
+  }
+  .vide {
+    margin: 28px 0 0;
+  }
+</style>
+
+<script>
+  // Le site est statique : un événement « à venir » le reste jusqu'à la
+  // prochaine publication. Ce petit script le range dans « Passés » dès
+  // le lendemain de sa date, sans intervention.
+  const today = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Europe/Paris' }).format(new Date());
+  document.querySelectorAll<HTMLElement>('[data-liste="a-venir"] [data-fin]').forEach((el) => {
+    if (el.dataset.fin! < today) el.hidden = true;
+  });
+  document.querySelectorAll<HTMLElement>('[data-liste="passes"] [data-fin]').forEach((el) => {
+    if (el.dataset.fin! < today) el.hidden = false;
+  });
+  for (const nom of ['a-venir', 'passes']) {
+    const visibles = document.querySelectorAll(`[data-liste="${nom}"] > :not([hidden])`).length;
+    const vide = document.querySelector<HTMLElement>(`[data-vide="${nom}"]`);
+    if (vide) vide.hidden = visibles > 0;
+  }
+</script>

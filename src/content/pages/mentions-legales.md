@@ -1,5 +1,5 @@
 ---
-title: Mentions légales
+titre: Mentions légales
 ---
 
 *Texte à fournir par l’association.*

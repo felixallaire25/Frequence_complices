@@ -22,8 +22,8 @@ const seed = [...page.id].reduce((s, c) => s + c.charCodeAt(0), 0);
 const signature = page.data.signature?.split('/').map((l) => l.trim());
 ---
 
-<Base title={page.data.title} description={page.data.description} current={current}>
-  <PageTitle slot="masthead" title={page.data.title} seed={seed} />
+<Base title={page.data.titre} description={page.data.description} current={current}>
+  <PageTitle slot="masthead" title={page.data.titre} seed={seed} />
 
   <section class="wrap texte">
     <div class="col">
