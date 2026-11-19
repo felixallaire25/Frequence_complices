@@ -36,9 +36,16 @@ public/_headers          en-têtes HTTP Cloudflare (cache, sécurité)
 Les fichiers commençant par `_` dans les dossiers de contenu sont des
 modèles ignorés au build.
 
-## Déploiement Cloudflare Pages
+## Déploiement Cloudflare
 
-À faire depuis le compte Cloudflare **de l'association** :
+Le site est 100 % statique : Cloudflare sert le dossier `dist/`.
+`wrangler.jsonc` le déclare explicitement, ce qui empêche Cloudflare
+d'ajouter automatiquement un adaptateur serveur (source d'erreurs).
+
+**Projet Workers** (parcours par défaut de Cloudflare) : connecter le dépôt,
+Build command `npm run build`, Deploy command `npx wrangler deploy`.
+
+**Ou projet Pages**, depuis le compte Cloudflare **de l'association** :
 
 1. *Workers & Pages* → *Create* → onglet *Pages* → *Connect to Git*.
 2. Autoriser GitHub et choisir le dépôt.
