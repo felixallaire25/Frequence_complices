@@ -1,0 +1,83 @@
+---
+/**
+ * Gabarit commun à toutes les pages :
+ * <head>, bandeau noir (en-tête + titre de page), contenu, pied de page.
+ */
+import '@fontsource-variable/familjen-grotesk/wght.css';
+import '@fontsource-variable/instrument-sans/wght.css';
+import '@fontsource-variable/instrument-sans/wght-italic.css';
+import '@fontsource-variable/space-grotesk/wght.css';
+import '../styles/global.css';
+
+import titreFont from '@fontsource-variable/familjen-grotesk/files/familjen-grotesk-latin-wght-normal.woff2?url';
+import texteFont from '@fontsource-variable/instrument-sans/files/instrument-sans-latin-wght-normal.woff2?url';
+
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { site, type NavKey } from '../data/site';
+
+interface Props {
+  /** Titre de la page (affiché dans l'onglet). Laisser vide pour l'accueil. */
+  title?: string;
+  description?: string;
+  current?: NavKey;
+  /** Empêche l'indexation (pages en attente de contenu, par ex.). */
+  noindex?: boolean;
+}
+
+const { title, description = site.description, current, noindex = false } = Astro.props;
+const fullTitle = title ? `${title} — ${site.nom}` : site.nom;
+const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#060606" />
+    {noindex && <meta name="robots" content="noindex" />}
+    {canonical && <link rel="canonical" href={canonical} />}
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:site_name" content={site.nom} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <link rel="preload" href={titreFont} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={texteFont} as="font" type="font/woff2" crossorigin />
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#contenu">Aller au contenu</a>
+
+    <div class="masthead dark">
+      <slot name="backdrop" />
+      <SiteHeader current={current} />
+      <div class="masthead-content" id="contenu" tabindex="-1">
+        <slot name="masthead" />
+      </div>
+    </div>
+
+    <main>
+      <slot />
+    </main>
+
+    <SiteFooter />
+  </body>
+</html>
+
+<style>
+  .masthead {
+    position: relative;
+    overflow: hidden;
+  }
+  .masthead-content {
+    position: relative;
+    z-index: 1;
+  }
+  .masthead-content:focus {
+    outline: none;
+  }
+</style>

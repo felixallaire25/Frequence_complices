@@ -1,0 +1,72 @@
+---
+import { nav, type NavKey } from '../data/site';
+
+interface Props {
+  current?: NavKey;
+}
+const { current } = Astro.props;
+---
+
+<header class="site-header wrap">
+  <a
+    class="logo"
+    href="/"
+    aria-label="Fréquences Complices, accueil"
+    aria-current={current === 'accueil' ? 'page' : undefined}
+  >
+    <!-- Emplacement du logo : remplacer ce texte par <img> quand le logo sera prêt. -->
+    <span aria-hidden="true">logo</span>
+  </a>
+  <nav aria-label="Navigation principale">
+    <ul>
+      {
+        nav.map((item) => (
+          <li>
+            <a
+              class="fl"
+              href={item.href}
+              aria-current={current === item.key ? 'page' : undefined}
+            >
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+</header>
+
+<style>
+  .site-header {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 32px;
+    padding-block: 24px;
+    color: var(--beige);
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 56px;
+    height: 56px;
+    border: 1.5px dashed currentColor;
+    border-radius: 50%;
+    font-family: var(--f-date);
+    font-size: 12px;
+    text-decoration: none;
+  }
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 28px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+</style>

@@ -1,0 +1,110 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base current="accueil">
+  <div slot="backdrop" class="hero-backdrop" aria-hidden="true"></div>
+
+  <Fragment slot="masthead">
+    <div class="hero-spacer" aria-hidden="true"></div>
+    <div class="hero-title wrap">
+      <h1>Fréquences<br />Complices</h1>
+      <p class="muted">Un espace complice, accessible et conscient, pour la création et le lien.</p>
+    </div>
+  </Fragment>
+
+  <section class="wrap sections">
+    <nav aria-label="Sections du site">
+      <a class="row" href="/a-propos/">
+        <span class="rt">À propos</span>
+        <span class="rm">Notre manifeste</span>
+      </a>
+      <a class="row" href="/evenements/">
+        <span class="rt">Événements</span>
+        <span class="rm">Dates à venir et éditions passées</span>
+      </a>
+      <a class="row" href="/productions/">
+        <span class="rt">Productions</span>
+        <span class="rm">Podcast, documentaire, événements</span>
+      </a>
+    </nav>
+  </section>
+</Base>
+
+<style>
+  .hero-backdrop {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 440px;
+  }
+  .hero-spacer {
+    height: 340px;
+  }
+  .hero-title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 28px 48px;
+    padding-block: 24px 56px;
+  }
+  h1 {
+    margin: 0;
+    flex: 1 1 auto;
+    font-family: var(--f-titre);
+    font-weight: 600;
+    font-size: clamp(56px, 11.4vw, 172px);
+    line-height: 0.88;
+    letter-spacing: -0.04em;
+  }
+  .hero-title p {
+    margin: 0;
+    flex: 0 1 320px;
+    font-size: clamp(18px, 1.6vw, 24px);
+    line-height: 1.4;
+  }
+
+  .sections {
+    padding-block: 72px 88px;
+  }
+  .sections nav {
+    border-bottom: var(--trait);
+  }
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px 32px;
+    padding: 28px 16px;
+    margin: 0 -16px;
+    border-top: var(--trait);
+    text-decoration: none;
+    transition:
+      background-color 0.2s,
+      color 0.2s;
+  }
+  .row:hover {
+    background: var(--noir);
+    color: var(--beige);
+  }
+  .row:focus-visible {
+    outline-offset: -3px;
+  }
+  .rt {
+    font-family: var(--f-titre);
+    font-weight: 600;
+    font-size: clamp(40px, 6vw, 88px);
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+  .rm {
+    font-family: var(--f-date);
+    font-size: 17px;
+    color: var(--gris-sur-beige);
+    transition: color 0.2s;
+  }
+  .row:hover .rm {
+    color: var(--gris-sur-noir);
+  }
+</style>
