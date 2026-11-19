@@ -9,7 +9,7 @@ import HeroShader from '../components/HeroShader.astro';
   <div slot="masthead" class="hero">
     <div class="hero-spacer" aria-hidden="true"></div>
     <div class="hero-title wrap">
-      <h1 data-onde="titre">Fréquences<br />Complices</h1>
+      <h1>Fréquences<br />Complices</h1>
       <p class="muted">Un espace complice, accessible et conscient, pour la création et le lien.</p>
     </div>
   </div>
@@ -17,20 +17,24 @@ import HeroShader from '../components/HeroShader.astro';
   <section class="wrap sections">
     <nav aria-label="Sections du site">
       <a class="row" href="/a-propos/">
-        <span class="rt" data-onde="survol">À propos</span>
+        <span class="rt">À propos</span>
         <span class="rm">Notre manifeste</span>
       </a>
       <a class="row" href="/evenements/">
-        <span class="rt" data-onde="survol">Événements</span>
+        <span class="rt">Événements</span>
         <span class="rm">Dates à venir et éditions passées</span>
       </a>
       <a class="row" href="/productions/">
-        <span class="rt" data-onde="survol">Productions</span>
+        <span class="rt">Productions</span>
         <span class="rm">Podcast, documentaire, événements</span>
       </a>
     </nav>
   </section>
 </Base>
+
+<script>
+  import '../scripts/lignes-titres';
+</script>
 
 <style>
   /* Le bandeau d'accueil occupe exactement la hauteur de l'écran */
@@ -85,6 +89,22 @@ import HeroShader from '../components/HeroShader.astro';
     transition:
       background-color 0.2s,
       color 0.2s;
+  }
+  /* Lignes qui épousent le titre au survol (src/scripts/lignes-titres.ts) */
+  .row {
+    position: relative;
+    overflow: hidden;
+  }
+  .row :global(.row-lines) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+  .rt,
+  .rm {
+    position: relative;
   }
   .row:last-child {
     border-bottom: var(--trait);

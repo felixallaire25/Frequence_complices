@@ -48,12 +48,6 @@ const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : un
     <meta property="og:description" content={description} />
     <link rel="preload" href={titreFont} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={texteFont} as="font" type="font/woff2" crossorigin />
-    <script is:inline>
-      document.documentElement.classList.add('js');
-      setTimeout(function () {
-        document.documentElement.classList.add('onde-ok');
-      }, 2000);
-    </script>
     <slot name="head" />
   </head>
   <body>
@@ -77,9 +71,6 @@ const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : un
 
     <SiteFooter />
     <ScrollLine />
-    <script>
-      import '../scripts/titres';
-    </script>
   </body>
 </html>
 
