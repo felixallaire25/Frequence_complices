@@ -24,7 +24,8 @@ src/
     evenements/*.md      événements → /evenements/<nom>/
     productions/*.md     productions → /productions/<nom>/
     images/              photos (optimisées au build par astro:assets)
-  data/site.ts           nom, e-mail, adresse, clé Web3Forms, navigation
+  data/site.json         e-mail, adresse, clé Web3Forms (modifiables dans le CMS)
+  data/site.ts           nom, description, navigation
   layouts/Base.astro     gabarit commun (head, bandeau noir, pied de page)
   components/            HeroShader, ScrollLine, MediaEmbed, cartes…
   scripts/hero-shader.ts animation WebGL de l'accueil (OGL)
@@ -67,7 +68,8 @@ du projet Pages.
 
 1. Sur https://web3forms.com, créer une clé avec l'adresse
    `frequencescomplices@gmail.com` (la clé arrive par e-mail).
-2. La coller dans `src/data/site.ts` à la place de `[CLÉ WEB3FORMS]`.
+2. La coller dans Pages CMS → « Réglages du site » (ou dans `src/data/site.json`)
+   à la place de `[CLÉ WEB3FORMS]`.
 
 Cette clé n'est pas secrète : elle indique seulement à Web3Forms vers quelle
 adresse transférer les messages. Offre gratuite : 250 envois par mois.
@@ -101,10 +103,24 @@ une modification du shader : lancer `npm run preview`, puis capturer
 l'élément `.hero-bg` (veil, titre et en-tête masqués) en 1600 px de large
 et en 390 px × DPR 2, et remplacer `hero-desktop.jpg` / `hero-mobile.jpg`.
 
-## Phase 2 (prévue)
+## Pages CMS (édition par l'association)
 
-- Pages CMS branché sur le dépôt : formulaires pour événements,
-  productions et pages libres. Les schémas de `content.config.ts` sont
-  déjà prêts ; médias dans `src/content/images` (chemin de sortie
-  `../images`).
+Formulaires d'édition sur https://app.pagescms.org, configurés dans
+`.pages.yml` (à la racine). Pages CMS enregistre directement dans le dépôt,
+sur la branche ouverte (doit être `main`, la branche publiée).
+
+- Mise en route : se connecter avec GitHub, installer l'application GitHub
+  Pages CMS sur le compte propriétaire du dépôt, ouvrir le dépôt.
+- Éditeurs : à inviter par e-mail (rubrique *Collaborators*), sans compte
+  GitHub. Ils modifient contenus et médias, pas la configuration.
+- Médias : `src/content/images`, chemin écrit `../images/…`.
+- Les schémas (`src/content.config.ts`) tolèrent les champs laissés vides
+  (`''`, `null`) que le CMS peut enregistrer.
+- Réglages (e-mail, adresse, clé Web3Forms) : `src/data/site.json`.
+- Toute nouvelle page de la rubrique « Pages » devient `/<nom-du-fichier>/`.
+- À la transition : réinstaller l'application sur le compte de l'association
+  et réinviter les éditeurs.
+
+## Suite prévue
+
 - Page d'entrée interactive.

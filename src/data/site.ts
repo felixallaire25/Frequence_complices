@@ -1,19 +1,22 @@
 /**
  * Réglages généraux du site.
- * Les valeurs entre crochets sont à fournir par l'association.
+ * L'e-mail, l'adresse et la clé du formulaire sont dans site.json
+ * (modifiables depuis Pages CMS, rubrique « Réglages du site »).
  */
+import reglages from './site.json';
+
 export const site = {
   nom: 'Fréquences Complices',
   description:
     'Fréquences Complices, association culturelle : arts, audiovisuel, médiation culturelle et événements.',
-  email: 'frequencescomplices@gmail.com',
-  adresse: '[ADRESSE DE L’ASSO]',
+  email: reglages.email,
+  adresse: reglages.adresse,
   /**
    * Clé du service d'envoi du formulaire de contact (https://web3forms.com).
-   * À créer avec l'adresse frequencescomplices@gmail.com : la clé n'est pas
-   * secrète, elle indique seulement à Web3Forms où transférer les messages.
+   * La clé n'est pas secrète : elle indique seulement à Web3Forms où
+   * transférer les messages.
    */
-  web3formsKey: '[CLÉ WEB3FORMS]',
+  web3formsKey: reglages.web3formsKey,
 };
 
 /** Navigation principale (ordre d'affichage). */

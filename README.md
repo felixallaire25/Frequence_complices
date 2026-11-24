@@ -1,122 +1,85 @@
 # Site de Fréquences Complices
 
 Ce guide s’adresse aux personnes de l’association qui mettent le site à jour.
-Pas besoin d’installer quoi que ce soit : tout se fait sur **github.com**, dans le navigateur.
+Tout se fait dans le navigateur, avec des formulaires : **https://app.pagescms.org**
 
-**Le principe :** chaque modification enregistrée sur GitHub (un « commit ») met le site
-à jour automatiquement en **2 à 3 minutes**. Si une erreur empêche la publication,
-le site en ligne ne change pas : rien ne casse, il suffit de corriger.
+**Le principe :** chaque enregistrement met le site à jour automatiquement en
+**2 à 3 minutes**. Si une erreur empêche la publication, le site en ligne ne
+change pas : rien ne casse, il suffit de corriger.
 
 ---
 
-## Où se trouve quoi
+## Se connecter
 
-| Je veux modifier…                     | Dossier                               |
-| ------------------------------------- | ------------------------------------- |
-| un événement                          | `src/content/evenements/`             |
-| une production (podcast, docu…)       | `src/content/productions/`            |
-| À propos, mentions légales, cookies…  | `src/content/pages/`                  |
-| les photos                            | `src/content/images/`                 |
-| l’adresse, l’e-mail                   | `src/data/site.ts`                    |
+1. Vous recevez une invitation par e-mail de Pages CMS : cliquez sur le lien.
+   (Pas besoin de compte GitHub.)
+2. Ensuite, allez sur **https://app.pagescms.org** et ouvrez le projet
+   **Frequence_complices**.
 
-Chaque événement, production ou page est **un fichier texte** (extension `.md`).
-Le haut du fichier, entre les deux lignes `---`, contient les informations
-(titre, date…). En dessous, le texte libre.
+Dans le menu de gauche :
 
-## Modifier un texte existant
-
-1. Ouvrez le fichier sur GitHub, cliquez sur le **crayon** (« Edit this file »).
-2. Modifiez le texte.
-3. Cliquez sur **Commit changes…** puis à nouveau sur **Commit changes**.
-
-Mise en forme du texte libre :
-
-```
-*italique*        **gras**        [texte du lien](https://adresse.fr)
-
-## Un intertitre
-
-- une liste
-- à puces
-```
+| Rubrique              | Pour…                                                    |
+| --------------------- | -------------------------------------------------------- |
+| **Événements**        | ajouter un événement, ses photos, son lien d’inscription |
+| **Productions**       | ajouter un podcast, un documentaire…                     |
+| **Pages**             | modifier À propos, les mentions légales, etc.            |
+| **Réglages du site**  | e-mail et adresse de l’association                       |
+| **Media**             | voir toutes les photos envoyées                          |
 
 ## Ajouter un événement
 
-1. Dans `src/content/evenements/`, ouvrez `_modele.md` et copiez tout son contenu.
-2. Revenez au dossier, cliquez sur **Add file → Create new file**.
-3. Nommez le fichier, par exemple `2026-03-concert-de-printemps.md`
-   (minuscules, sans espaces ni accents ; ce nom devient l’adresse de la page).
-4. Collez le modèle et remplissez-le :
-
-```yaml
----
-titre: "Concert de printemps"
-date: 2026-03-21          # année-mois-jour
-heure: "19h30"
-lieu: "Nom du lieu, ville"
-inscription: "https://lien-vers-la-billetterie"
-brouillon: false          # true = caché du site
----
-
-Programme, artistes, tarifs…
-```
-
-5. **Commit changes**.
+1. **Événements** → **Add an entry** (ajouter).
+2. Remplissez : titre, date, heure, lieu, **lien d’inscription** (adresse
+   complète commençant par `https://`).
+3. Écrivez la description dans le grand champ en bas.
+4. **Save** (enregistrer).
 
 L’événement apparaît dans « À venir » avec le bouton **S’inscrire**.
 Le lendemain de sa date, il passe **tout seul** dans « Passés ».
-Pour un événement sur plusieurs jours, ajoutez `fin: 2026-03-23`.
 
-> Mettez les textes entre guillemets droits `"…"` s’ils contiennent deux-points (`:`).
-> Supprimez les deux exemples (`exemple-a-venir.md`, `exemple-passe.md`)
-> dès que vous avez vos vrais événements : ouvrez-les, menu `…` → **Delete file**.
+- Plusieurs jours ? Remplissez aussi « Dernier jour ».
+- Pas encore prêt ? Cochez **Brouillon** : il reste caché du site.
 
 ## Ajouter des photos
 
-1. Dans `src/content/images/`, cliquez sur **Add file → Upload files** et déposez vos photos.
-   - Noms de fichiers en minuscules, sans espaces ni accents : `concert-2026-01.jpg`
-   - JPG ou PNG, idéalement moins de 5 Mo (le site les redimensionne tout seul).
-2. **Commit changes**.
-3. Dans le fichier de l’événement, ajoutez :
+Dans un événement, rubrique **Photos** → **Add** (ajouter une ligne) :
 
-```yaml
-photos:
-  - image: ../images/concert-2026-01.jpg
-    description: "Le public devant la scène"
-  - image: ../images/concert-2026-02.jpg
-    description: "Les musiciennes en répétition"
-```
+1. Cliquez sur la case photo, puis **Upload** pour envoyer une photo depuis
+   votre ordinateur (JPG ou PNG, idéalement moins de 5 Mo : le site les
+   redimensionne tout seul).
+2. Décrivez en quelques mots ce que montre la photo : c’est lu aux personnes
+   aveugles.
+3. Ajoutez autant de lignes que de photos, puis **Save**.
 
 La **première photo** sert de vignette dans la liste des événements passés.
-La `description` est lue aux personnes aveugles : décrivez simplement ce qu’on voit.
 
 ## Ajouter un lien
 
-- **Inscription** à un événement : champ `inscription:` (adresse complète, commençant par `https://`).
-- **Dans un texte** : `[texte cliquable](https://adresse.fr)`.
-- **Podcast, vidéo** : dans une production, champ `media:` avec le lien
-  Vimeo, YouTube, SoundCloud ou Spotify. Le lecteur s’affiche sur la page
-  et ne se charge qu’au clic du visiteur (pas de cookies avant).
+- **Inscription** à un événement : champ « Lien d’inscription ».
+- **Dans un texte** : sélectionnez les mots, puis le bouton lien de la barre d’outils.
+- **Podcast, vidéo** : dans une production, champ « Lien Vimeo, YouTube,
+  SoundCloud ou Spotify ». Le lecteur s’affiche sur la page et ne se charge
+  qu’au clic du visiteur (pas de cookies avant).
 
 ## Ajouter une production
 
-Même méthode que pour un événement, avec `src/content/productions/_modele.md`.
-Le champ `categorie:` vaut `podcast`, `documentaire` ou `evenements`.
-Tant qu’une catégorie est vide, sa carte affiche « Bientôt ».
-Pensez à mettre `brouillon: false` pour la publier.
+**Productions** → **Add an entry**, choisissez la catégorie (Podcast,
+Documentaire, Événements). Tant qu’une catégorie est vide, sa carte affiche
+« Bientôt ».
+
+## Supprimer les exemples
+
+Les événements entre crochets (« [Titre de l’événement] ») sont des exemples :
+supprimez-les dès que vous avez vos vrais événements (menu `…` de la ligne →
+**Delete**).
 
 ## Si quelque chose ne marche pas
 
-Après un commit, une pastille apparaît à côté du message sur la page du dépôt :
-🟡 en cours, ✅ publié, ❌ erreur. En cas d’erreur, le site en ligne reste
-sur la version précédente. Causes fréquentes :
-
-- une date mal écrite (il faut `2026-03-21`) ;
-- un `:` dans un texte sans guillemets ;
-- un nom de photo mal recopié (majuscules, extension `.jpg` / `.jpeg`).
-
-Au besoin, contactez Félix (collaborateur du dépôt).
+Si le site ne change pas après 5 minutes, une information est sans doute mal
+remplie (par exemple un lien qui ne commence pas par `https://`). Le site en
+ligne reste alors sur la version précédente. Au besoin, contactez Félix.
 
 ---
 
-Partie technique (installation locale, déploiement, nom de domaine) : [docs/technique.md](docs/technique.md).
+Partie technique (installation locale, déploiement, CMS, nom de domaine) :
+[docs/technique.md](docs/technique.md).

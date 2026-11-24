@@ -8,6 +8,14 @@ import { z } from 'astro/zod';
  * avec un chemin du type : ../images/ma-photo.jpg
  */
 
+/**
+ * Champs laissés vides dans le CMS : Pages CMS peut enregistrer '' ou null.
+ * On les traite comme « non renseignés » pour ne pas bloquer la publication.
+ */
+const vide = (v: unknown) => (v === '' || v === null ? undefined : v);
+const texte = () => z.preprocess(vide, z.string().optional());
+const dateFacultative = () => z.preprocess(vide, z.coerce.date().optional());
+
 /** Une photo : soit un simple chemin, soit { image, description }. */
 const photo = ({ image }: SchemaContext) =>
   z.union([
@@ -15,20 +23,30 @@ const photo = ({ image }: SchemaContext) =>
     z.object({
       image: image(),
       /** Décrit la photo pour les personnes qui ne la voient pas. */
-      description: z.string().optional(),
+      description: texte(),
     }),
   ]);
+
+/** Liste de photos ; les lignes sans image (ajoutées puis laissées vides) sont ignorées. */
+const photos = (ctx: SchemaContext) =>
+  z.preprocess(
+    (v) =>
+      (Array.isArray(v) ? v : []).filter((p) =>
+        typeof p === 'string' ? p.trim() !== '' : p && typeof p === 'object' && (p as { image?: unknown }).image,
+      ),
+    z.array(photo(ctx)),
+  );
 
 /** Pages de texte (À propos, mentions légales…) : src/content/pages/*.md */
 const pages = defineCollection({
   loader: glob({ pattern: '*.md', base: './src/content/pages' }),
   schema: z.object({
     titre: z.string(),
-    description: z.string().optional(),
+    description: texte(),
     /** Phrase d'accroche affichée en gros au-dessus du texte. */
-    intro: z.string().optional(),
+    intro: texte(),
     /** Signature en bas du texte ; « / » pour aller à la ligne. */
-    signature: z.string().optional(),
+    signature: texte(),
   }),
 });
 
@@ -44,15 +62,15 @@ const evenements = defineCollection({
       /** Jour de l'événement, au format AAAA-MM-JJ. */
       date: z.coerce.date(),
       /** Dernier jour, si l'événement dure plusieurs jours (AAAA-MM-JJ). */
-      fin: z.coerce.date().optional(),
-      heure: z.string().optional(),
-      lieu: z.string().optional(),
+      fin: dateFacultative(),
+      heure: texte(),
+      lieu: texte(),
       /** Lien vers la billetterie ou le formulaire d'inscription. */
-      inscription: z.string().optional(),
+      inscription: texte(),
       /** Photos de l'édition (la première sert de vignette). */
-      photos: z.array(photo(ctx)).default([]),
+      photos: photos(ctx),
       /** true = caché sur le site (pour préparer un événement à l'avance). */
-      brouillon: z.boolean().default(false),
+      brouillon: z.preprocess(vide, z.boolean().default(false)),
     }),
 });
 
@@ -72,15 +90,15 @@ const productions = defineCollection({
       /** podcast, documentaire ou evenements */
       categorie: z.enum(['podcast', 'documentaire', 'evenements']),
       /** Date de sortie (AAAA-MM-JJ), sert à trier. */
-      date: z.coerce.date().optional(),
+      date: dateFacultative(),
       /** Une phrase de présentation, affichée dans la liste. */
-      resume: z.string().optional(),
+      resume: texte(),
       /** Image de présentation (facultative). */
-      image: image().optional(),
-      image_description: z.string().optional(),
+      image: z.preprocess(vide, image().optional()),
+      image_description: texte(),
       /** Lien Vimeo, YouTube, SoundCloud ou Spotify : le lecteur s'affiche sur la page. */
-      media: z.string().optional(),
-      brouillon: z.boolean().default(false),
+      media: texte(),
+      brouillon: z.preprocess(vide, z.boolean().default(false)),
     }),
 });
 

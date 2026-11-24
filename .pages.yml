@@ -1,0 +1,171 @@
+# Configuration de Pages CMS (https://app.pagescms.org)
+# Définit les formulaires que voient les éditeurs de l'association.
+# Les noms de champs doivent correspondre à src/content.config.ts.
+
+media:
+  input: src/content/images
+  output: ../images
+  categories: [image]
+  rename: safe
+
+content:
+  - name: evenements
+    label: Événements
+    type: collection
+    path: src/content/evenements
+    exclude: [_modele.md]
+    filename: "{primary}.md"
+    view:
+      primary: titre
+      fields: [titre, date, lieu, brouillon]
+      sort: [date, titre]
+      default:
+        sort: date
+        order: desc
+    fields:
+      - name: titre
+        label: Titre
+        type: string
+        required: true
+      - name: date
+        label: Date
+        type: date
+        required: true
+        options:
+          format: yyyy-MM-dd
+      - name: fin
+        label: Dernier jour (seulement si l’événement dure plusieurs jours)
+        type: date
+        options:
+          format: yyyy-MM-dd
+      - name: heure
+        label: Heure (ex. 19h30)
+        type: string
+      - name: lieu
+        label: Lieu
+        type: string
+      - name: inscription
+        label: Lien d’inscription ou de billetterie (commence par https://)
+        type: string
+      - name: photos
+        label: Photos (la première sert de vignette dans « Passés »)
+        type: object
+        list: true
+        fields:
+          - name: image
+            label: Photo
+            type: image
+          - name: description
+            label: Ce que montre la photo (lu aux personnes aveugles)
+            type: string
+      - name: brouillon
+        label: Brouillon (caché du site)
+        type: boolean
+        default: false
+      - name: body
+        label: Description
+        type: rich-text
+        options:
+          format: markdown
+
+  - name: productions
+    label: Productions
+    type: collection
+    path: src/content/productions
+    exclude: [_modele.md]
+    filename: "{primary}.md"
+    view:
+      primary: titre
+      fields: [titre, categorie, date, brouillon]
+      sort: [date, titre]
+      default:
+        sort: date
+        order: desc
+    fields:
+      - name: titre
+        label: Titre
+        type: string
+        required: true
+      - name: categorie
+        label: Catégorie
+        type: select
+        required: true
+        options:
+          values:
+            - name: podcast
+              label: Podcast
+            - name: documentaire
+              label: Documentaire
+            - name: evenements
+              label: Événements
+      - name: date
+        label: Date de sortie
+        type: date
+        options:
+          format: yyyy-MM-dd
+      - name: resume
+        label: Résumé (une phrase, affichée dans la liste)
+        type: text
+      - name: image
+        label: Image de présentation
+        type: image
+      - name: image_description
+        label: Ce que montre l’image (lu aux personnes aveugles)
+        type: string
+      - name: media
+        label: Lien Vimeo, YouTube, SoundCloud ou Spotify (le lecteur s’affiche sur la page)
+        type: string
+      - name: brouillon
+        label: Brouillon (caché du site)
+        type: boolean
+        default: false
+      - name: body
+        label: Texte de présentation
+        type: rich-text
+        options:
+          format: markdown
+
+  - name: pages
+    label: Pages (À propos, mentions légales…)
+    type: collection
+    path: src/content/pages
+    filename: "{primary}.md"
+    view:
+      primary: titre
+      fields: [titre]
+    fields:
+      - name: titre
+        label: Titre
+        type: string
+        required: true
+      - name: description
+        label: Description pour les moteurs de recherche (facultatif)
+        type: text
+      - name: intro
+        label: Phrase d’accroche en gros (facultatif)
+        type: text
+      - name: signature
+        label: Signature en bas de page (« / » pour aller à la ligne)
+        type: string
+      - name: body
+        label: Texte
+        type: rich-text
+        options:
+          format: markdown
+
+  - name: reglages
+    label: Réglages du site
+    type: file
+    path: src/data/site.json
+    format: json
+    fields:
+      - name: email
+        label: E-mail de l’association
+        type: string
+        required: true
+      - name: adresse
+        label: Adresse de l’association
+        type: text
+      - name: web3formsKey
+        label: Clé Web3Forms (formulaire de contact)
+        type: string
