@@ -5,6 +5,18 @@ description: "Le manifeste de Fréquences Complices : un espace complice,
 intro: Fréquences Complices est né d’un besoin collectif d’être, ensemble, au
   service de la création et du lien.
 signature: Compliceusement vôtre, / Fréquences Complices
+menu: non
+sections:
+  - type: image
+    image: ../images/b4314f52e465f20ea2ba26bf04cab729-1.jpg
+    taille: moyenne
+    alignement: gauche
+  - type: galerie
+    colonnes: "3"
+    images:
+      - image: ../images/moietlemontfuji.jpg
+      - image: ../images/thumb-1920-82076-1.jpg
+      - image: ../images/8d1qe5vs35le1.jpeg
 ---
 Nous voudrions partager la complicité qui nous unit et en faire le mot d’ordre de nos manifestations. Notre complicité, c’est d’abord un état d’esprit, une connivence, une manière de faire liaison. Développer ce sentiment, qui peut parfois être absent de la consommation culturelle, nous semble important : il est le terreau fertile qui nous permet de célébrer le commun et le vivre ensemble que la culture peut offrir. Notre complicité, c’est aussi une forme d’effraction qui se déploie sur deux plans. D’abord, refuser une consommation individuelle et isolante de la culture ; ensuite, valoriser les formes et les artistes émergent.e.s à faire effraction dans la création et faire valoir leur voix. Notre mission phare : offrir un espace *complice*, accessible et conscient, qui se veut stimulant pour la créativité de chacun.e.
 
@@ -17,10 +29,6 @@ Au-delà de notre aspiration à contribuer à l’avènement du paysage culturel
 &nbsp;
 
 # test titre
-
-![](../images/b4314f52e465f20ea2ba26bf04cab729.jpg)
-
-
 
 - bullet points
 
