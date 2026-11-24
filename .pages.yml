@@ -132,7 +132,7 @@ content:
     filename: "{primary}.md"
     view:
       primary: titre
-      fields: [titre]
+      fields: [titre, menu]
     fields:
       - name: titre
         label: Titre
@@ -147,6 +147,27 @@ content:
       - name: signature
         label: Signature en bas de page (« / » pour aller à la ligne)
         type: string
+      - name: menu
+        label: Afficher dans le menu
+        type: select
+        default: non
+        options:
+          values:
+            - name: non
+              label: Ne pas afficher
+            - name: principal
+              label: Menu principal (avant Contact)
+            - name: a-propos
+              label: Sous-menu de « À propos »
+            - name: evenements
+              label: Sous-menu de « Événements »
+            - name: productions
+              label: Sous-menu de « Productions »
+            - name: contact
+              label: Sous-menu de « Contact »
+      - name: ordre
+        label: Ordre dans le menu (1 = en premier, facultatif)
+        type: number
       - name: body
         label: Texte
         type: rich-text

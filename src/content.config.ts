@@ -47,6 +47,16 @@ const pages = defineCollection({
     intro: texte(),
     /** Signature en bas du texte ; « / » pour aller à la ligne. */
     signature: texte(),
+    /**
+     * Place dans le menu : vide = absente ; « principal » = menu principal ;
+     * a-propos, evenements, productions ou contact = sous-menu de cet élément.
+     */
+    menu: z.preprocess(
+      (v) => (v === '' || v === null || v === 'non' ? undefined : v),
+      z.enum(['principal', 'a-propos', 'evenements', 'productions', 'contact']).optional(),
+    ),
+    /** Ordre d'affichage dans le menu (petit nombre = en premier). */
+    ordre: z.preprocess(vide, z.coerce.number().optional()),
   }),
 });
 

@@ -7,7 +7,6 @@
 import { getCollection, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import PageTitle from '../components/PageTitle.astro';
-import { nav, type NavKey } from '../data/site';
 
 export async function getStaticPaths() {
   const pages = await getCollection('pages');
@@ -16,7 +15,7 @@ export async function getStaticPaths() {
 
 const { page } = Astro.props;
 const { Content } = await render(page);
-const current: NavKey = nav.some((n) => n.key === page.id) ? (page.id as NavKey) : 'autre';
+const current = page.id;
 const signature = page.data.signature?.split('/').map((l) => l.trim());
 ---
 

@@ -27,4 +27,5 @@ export const nav = [
   { href: '/contact/', label: 'Contact', key: 'contact' },
 ] as const;
 
-export type NavKey = (typeof nav)[number]['key'] | 'accueil' | 'autre';
+/** Page en cours : clé d'une rubrique, identifiant d'une page, 'accueil'… */
+export type NavKey = string;

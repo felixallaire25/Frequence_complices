@@ -67,6 +67,18 @@ La **première photo** sert de vignette dans la liste des événements passés.
 Documentaire, Événements). Tant qu’une catégorie est vide, sa carte affiche
 « Bientôt ».
 
+## Créer une page et l’ajouter au menu
+
+1. **Pages** → **Add an entry** : titre, texte (comme dans Notion : titres,
+   listes, tableaux, images…), **Save**.
+   La page est en ligne à l’adresse `/titre-de-la-page/`.
+2. Pour la faire apparaître dans le menu, choisissez dans
+   **Afficher dans le menu** :
+   - **Menu principal** : elle s’ajoute avant « Contact » ;
+   - **Sous-menu de « À propos »** (ou Événements, Productions, Contact) :
+     une petite flèche apparaît à côté de cet élément du menu.
+3. Plusieurs pages au même endroit ? Le champ **Ordre** (1, 2, 3…) les classe.
+
 ## Supprimer les exemples
 
 Les événements entre crochets (« [Titre de l’événement] ») sont des exemples :

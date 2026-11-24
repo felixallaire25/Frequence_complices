@@ -1,10 +1,12 @@
 ---
-import { nav, type NavKey } from '../data/site';
+import { menu } from '../lib/menu';
+import type { NavKey } from '../data/site';
 
 interface Props {
   current?: NavKey;
 }
 const { current } = Astro.props;
+const entrees = await menu();
 ---
 
 <header class="site-header wrap">
@@ -18,25 +20,80 @@ const { current } = Astro.props;
     <span aria-hidden="true">logo</span>
   </a>
   <nav aria-label="Navigation principale">
-    <ul>
+    <ul class="menu">
       {
-        nav.map((item) => (
-          <li>
-            <a
-              class="fl"
-              href={item.href}
-              aria-current={current === item.key ? 'page' : undefined}
-            >
-              {item.label}
-            </a>
-          </li>
-        ))
+        entrees.map((e) => {
+          const actif = current === e.key || e.enfants.some((c) => c.key === current);
+          return (
+            <li class:list={[{ 'a-sous-menu': e.enfants.length > 0 }]}>
+              <a
+                class:list={['fl', { 'est-actif': actif }]}
+                href={e.href}
+                aria-current={current === e.key ? 'page' : undefined}
+              >
+                {e.label}
+              </a>
+              {e.enfants.length > 0 && (
+                <>
+                  <button
+                    class="sous-bouton"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls={`sous-menu-${e.key}`}
+                  >
+                    <span class="visually-hidden">Sous-menu {e.label}</span>
+                    <svg viewBox="0 0 12 8" width="12" height="8" aria-hidden="true">
+                      <path d="M1 1.5 6 6.5 11 1.5" fill="none" stroke="currentColor" stroke-width="1.6" />
+                    </svg>
+                  </button>
+                  <ul class="sous-menu" id={`sous-menu-${e.key}`}>
+                    {e.enfants.map((c) => (
+                      <li>
+                        <a class="fl" href={c.href} aria-current={current === c.key ? 'page' : undefined}>
+                          {c.label}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+            </li>
+          );
+        })
       }
     </ul>
   </nav>
 </header>
 
 <script>
+  // Sous-menus : ouverture au clic/toucher (bouton flèche), fermeture avec
+  // Échap ou en cliquant ailleurs. Au survol (souris), ils s'ouvrent aussi en CSS.
+  const boutons = document.querySelectorAll<HTMLButtonElement>('.sous-bouton');
+  const fermer = (sauf?: HTMLButtonElement) =>
+    boutons.forEach((b) => {
+      if (b !== sauf) {
+        b.setAttribute('aria-expanded', 'false');
+        b.parentElement?.classList.remove('ouvert');
+      }
+    });
+  boutons.forEach((b) =>
+    b.addEventListener('click', () => {
+      const ouvrir = b.getAttribute('aria-expanded') !== 'true';
+      fermer(b);
+      b.setAttribute('aria-expanded', String(ouvrir));
+      b.parentElement?.classList.toggle('ouvert', ouvrir);
+    }),
+  );
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    const ouvert = document.querySelector<HTMLButtonElement>('.sous-bouton[aria-expanded="true"]');
+    fermer();
+    ouvert?.focus();
+  });
+  document.addEventListener('click', (e) => {
+    if (!(e.target as Element).closest('.a-sous-menu')) fermer();
+  });
+
   // Hauteur réelle de l'en-tête (elle varie quand le menu passe à la ligne),
   // utilisée pour que le bandeau d'accueil tienne pile dans l'écran.
   const header = document.querySelector<HTMLElement>('.site-header');
@@ -73,11 +130,69 @@ const { current } = Astro.props;
     text-decoration: none;
   }
   ul {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0 28px;
     margin: 0;
     padding: 0;
     list-style: none;
+  }
+  .menu {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 28px;
+  }
+  .est-actif {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 8px;
+  }
+
+  /* Sous-menus */
+  .a-sous-menu {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+  .sous-bouton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    cursor: pointer;
+  }
+  .sous-bouton svg {
+    transition: transform 0.2s;
+  }
+  .sous-bouton[aria-expanded='true'] svg {
+    transform: rotate(180deg);
+  }
+  .sous-menu {
+    position: absolute;
+    top: 100%;
+    left: -16px;
+    z-index: 30;
+    display: none;
+    min-width: 220px;
+    max-width: calc(100vw - 40px);
+    padding: 8px 16px;
+    background: var(--sombre);
+    border: 1px solid color-mix(in srgb, var(--sur-sombre) 25%, transparent);
+  }
+  .sous-menu .fl {
+    display: block;
+    padding: 8px 0;
+  }
+  .ouvert > .sous-menu {
+    display: block;
+  }
+  @media (hover: hover) {
+    .a-sous-menu:hover > .sous-menu,
+    .a-sous-menu:focus-within > .sous-menu {
+      display: block;
+    }
   }
 </style>

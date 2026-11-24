@@ -252,6 +252,8 @@ a {
   margin: 0 0 1.2em;
   text-wrap: pretty;
 }
+/* un « Titre 1 » saisi dans le CMS est affiché comme un intertitre */
+.prose h1,
 .prose h2,
 .prose h3 {
   margin: 1.6em 0 0.5em;
@@ -260,6 +262,7 @@ a {
   line-height: 1.1;
   letter-spacing: -0.02em;
 }
+.prose h1,
 .prose h2 {
   font-size: clamp(28px, 3.4vw, 40px);
 }
@@ -272,6 +275,31 @@ a {
 .prose img {
   height: auto;
   margin: 1.5em 0;
+}
+.prose ul,
+.prose ol {
+  padding-left: 1.2em;
+}
+.prose table {
+  width: 100%;
+  margin: 0 0 1.4em;
+  border-collapse: collapse;
+  font-size: 18px;
+}
+.prose th,
+.prose td {
+  padding: 10px 14px;
+  border: 1px solid color-mix(in srgb, var(--texte) 30%, transparent);
+  text-align: left;
+  vertical-align: top;
+}
+.prose th {
+  font-weight: 600;
+}
+.prose hr {
+  margin: 2em 0;
+  border: 0;
+  border-top: var(--trait);
 }
 
 /* ---------- Lignes qui épousent les titres (src/scripts/lignes.ts) ---------- */
