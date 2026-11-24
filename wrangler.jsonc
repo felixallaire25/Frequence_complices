@@ -4,6 +4,9 @@
   // (pas d'adaptateur serveur, pas de Worker).
   "name": "frequence-complices",
   "compatibility_date": "2026-11-01",
+  // Requis par la commande de prévisualisation de Cloudflare (npx wrangler preview),
+  // lancée à chaque commit ; peut rester vide.
+  "previews": {},
   "assets": {
     "directory": "./dist",
     "not_found_handling": "404-page"
