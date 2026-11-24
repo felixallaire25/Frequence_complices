@@ -2,7 +2,7 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   // Site 100 % statique : Cloudflare sert simplement le dossier dist/
   // (pas d'adaptateur serveur, pas de Worker).
-  "name": "frequences-complices",
+  "name": "frequence-complices",
   "compatibility_date": "2026-11-01",
   "assets": {
     "directory": "./dist",
