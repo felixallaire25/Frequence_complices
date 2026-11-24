@@ -1,12 +1,33 @@
 ---
 titre: À propos
-description: "Le manifeste de Fréquences Complices : un espace complice, accessible et conscient, au service de la création et du lien."
-intro: Fréquences Complices est né d’un besoin collectif d’être, ensemble, au service de la création et du lien.
+description: "Le manifeste de Fréquences Complices : un espace complice,
+  accessible et conscient, au service de la création et du lien."
+intro: Fréquences Complices est né d’un besoin collectif d’être, ensemble, au
+  service de la création et du lien.
 signature: Compliceusement vôtre, / Fréquences Complices
 ---
-
 Nous voudrions partager la complicité qui nous unit et en faire le mot d’ordre de nos manifestations. Notre complicité, c’est d’abord un état d’esprit, une connivence, une manière de faire liaison. Développer ce sentiment, qui peut parfois être absent de la consommation culturelle, nous semble important : il est le terreau fertile qui nous permet de célébrer le commun et le vivre ensemble que la culture peut offrir. Notre complicité, c’est aussi une forme d’effraction qui se déploie sur deux plans. D’abord, refuser une consommation individuelle et isolante de la culture ; ensuite, valoriser les formes et les artistes émergent.e.s à faire effraction dans la création et faire valoir leur voix. Notre mission phare : offrir un espace *complice*, accessible et conscient, qui se veut stimulant pour la créativité de chacun.e.
 
 Fréquences Complices a pour domaine d’activité la culture et les arts sous toutes ses formes. Nous proposons un cadre basé sur l’articulation de différents médiums et de formes d’expression sur différentes *fréquences* (forme audiovisuelle, médiation culturelle, etc.). L’objectif est de catalyser dans nos projets plusieurs voix artistiques émergentes afin de créer un réseau qui relie les différents mouvements récents du local à l’international. Tenant compte de ce but, nous gardons pour public-cible les jeunes, jeunes-adultes et adultes.
 
 Au-delà de notre aspiration à contribuer à l’avènement du paysage culturel futur, nous souhaitons aussi proposer un espace de réflexion politique sur nos modes de vie. Fréquences Complices a pour vocation d’entretenir une sphère d’entraide et d’échange artistique et/ou politique, indispensable compte-tenu des mouvances autoritaires à travers le monde. La complicité nous semble au cœur des valeurs qui nous sont chères : le respect, l’égalité, la solidarité, le féminisme, l’antiracisme et l’antifascisme. Dans cette perspective, notre objectif est d’explorer ce qu’une éthique de la *complicité* peut apporter au vivre ensemble et au politique au sens large. Cela se concrétise par la volonté d’offrir des moments de vie, densifiés par le collectif, où chacun a sa place, sa voix, et compose une *fréquence* commune.
+
+
+
+&nbsp;
+
+# test titre
+
+![](../images/b4314f52e465f20ea2ba26bf04cab729.jpg)
+
+
+
+- bullet points
+
+
+| tableau | test | OK |
+| ------- | ---- | --- |
+|  |  |  |
+|  |  |  |
+
+
