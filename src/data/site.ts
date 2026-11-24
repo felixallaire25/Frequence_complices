@@ -8,7 +8,6 @@ export const site = {
     'Fréquences Complices, association culturelle : arts, audiovisuel, médiation culturelle et événements.',
   email: 'frequencescomplices@gmail.com',
   adresse: '[ADRESSE DE L’ASSO]',
-  realisation: 'Félix Allaire',
   /**
    * Clé du service d'envoi du formulaire de contact (https://web3forms.com).
    * À créer avec l'adresse frequencescomplices@gmail.com : la clé n'est pas
