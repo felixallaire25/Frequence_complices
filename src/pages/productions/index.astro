@@ -89,8 +89,8 @@ const compte = (n: number) => (n > 1 ? `${n} productions` : '1 production');
     justify-content: flex-end;
     min-height: 460px;
     padding: 28px;
-    background: var(--noir);
-    color: var(--beige);
+    background: var(--sombre);
+    color: var(--sur-sombre);
     overflow: hidden;
     text-decoration: none;
   }
@@ -112,7 +112,7 @@ const compte = (n: number) => (n > 1 ? `${n} productions` : '1 production');
     margin: 12px 0 0;
     font-family: var(--f-date);
     font-size: 18px;
-    color: var(--gris-sur-noir);
+    color: var(--sur-sombre-2);
   }
   a.carte:hover h2 {
     text-decoration: underline;
@@ -120,7 +120,7 @@ const compte = (n: number) => (n > 1 ? `${n} productions` : '1 production');
     text-underline-offset: 6px;
   }
   a.carte:focus-visible {
-    outline-color: var(--noir);
+    outline-color: var(--texte);
   }
 
   .liste {
@@ -150,7 +150,7 @@ const compte = (n: number) => (n > 1 ? `${n} productions` : '1 production');
   .vignette-vide {
     position: relative;
     overflow: hidden;
-    background: var(--noir);
+    background: var(--sombre);
   }
   .titre {
     font-family: var(--f-titre);
@@ -167,7 +167,7 @@ const compte = (n: number) => (n > 1 ? `${n} productions` : '1 production');
   .meta {
     font-family: var(--f-date);
     font-size: 16px;
-    color: var(--gris-sur-beige);
+    color: var(--texte-2);
   }
   .resume {
     font-size: 18px;

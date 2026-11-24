@@ -20,6 +20,8 @@ import { site } from '../data/site';
 <style>
   .site-footer {
     padding-block: 64px 40px;
+    /* séparation discrète, utile quand le corps de page est aussi sombre */
+    border-top: 1px solid color-mix(in srgb, var(--sur-sombre) 14%, transparent);
   }
   .grid {
     display: grid;
@@ -46,6 +48,6 @@ import { site } from '../data/site';
   .credit {
     margin: 0;
     font-size: 18px;
-    color: var(--gris-sur-noir);
+    color: var(--sur-sombre-2);
   }
 </style>

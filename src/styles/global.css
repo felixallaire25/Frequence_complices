@@ -9,8 +9,19 @@
   --beige: #ebe6d8;
   --gris-sur-noir: #b8b3a5;   /* texte secondaire sur fond noir (contraste 9,5:1) */
   --gris-sur-beige: #575246;  /* texte secondaire sur fond beige (contraste 6,2:1) */
-  --beige-fonce: #ddd6c2;     /* fonds de vignettes en attente de photo */
-  --survol-bouton: #2a2924;
+
+  /*
+   * Rôles des couleurs (ce que le site utilise réellement).
+   * Pour essayer d'autres couleurs sans toucher au code : ajouter
+   * ?palette à l'adresse d'une page (voir src/scripts/palette.ts).
+   */
+  --fond: var(--beige); /* fond du corps de page */
+  --texte: var(--noir); /* texte du corps de page */
+  --texte-2: var(--gris-sur-beige); /* texte secondaire */
+  --sombre: var(--noir); /* bandeau, pied de page, cartes */
+  --sur-sombre: var(--beige); /* texte sur fond sombre */
+  --sur-sombre-2: var(--gris-sur-noir); /* texte secondaire sur fond sombre */
+  --vignette: color-mix(in srgb, var(--fond) 92%, var(--texte));
 
   /* Accents : réservés aux ondes */
   --rose: #ff5c8a;
@@ -48,8 +59,8 @@ html {
 
 body {
   margin: 0;
-  background: var(--beige);
-  color: var(--noir);
+  background: var(--fond);
+  color: var(--texte);
   font-family: var(--f-texte);
   font-size: 20px;
   line-height: 1.55;
@@ -96,8 +107,8 @@ a {
   left: 8px;
   z-index: 100;
   padding: 12px 20px;
-  background: var(--beige);
-  color: var(--noir);
+  background: var(--fond);
+  color: var(--texte);
   font-weight: 600;
   text-decoration: none;
   transform: translateY(-200%);
@@ -109,8 +120,8 @@ a {
 /* ---------- Sections ---------- */
 
 .dark {
-  background: var(--noir);
-  color: var(--beige);
+  background: var(--sombre);
+  color: var(--sur-sombre);
 }
 
 .wrap {
@@ -146,10 +157,10 @@ a {
 }
 
 .muted {
-  color: var(--gris-sur-beige);
+  color: var(--texte-2);
 }
 .dark .muted {
-  color: var(--gris-sur-noir);
+  color: var(--sur-sombre-2);
 }
 
 /* ---------- Boutons et liens ---------- */
@@ -160,8 +171,8 @@ a {
   justify-content: center;
   min-height: 52px;
   padding: 0 28px;
-  background: var(--noir);
-  color: var(--beige);
+  background: var(--texte);
+  color: var(--fond);
   font-family: var(--f-texte);
   font-size: 18px;
   font-weight: 600;
@@ -171,15 +182,15 @@ a {
   cursor: pointer;
 }
 .btn:hover {
-  background: var(--survol-bouton);
+  background: color-mix(in srgb, var(--texte) 82%, var(--fond));
 }
 .btn:disabled {
   opacity: 0.6;
   cursor: progress;
 }
 .dark .btn {
-  background: var(--beige);
-  color: var(--noir);
+  background: var(--sur-sombre);
+  color: var(--sombre);
 }
 
 .fl {
@@ -208,20 +219,20 @@ a {
   width: 100%;
   padding: 14px 16px;
   background: transparent;
-  border: 1.5px solid var(--noir);
+  border: 1.5px solid var(--texte);
   border-radius: 0;
   font-family: var(--f-texte);
   font-size: 18px;
-  color: var(--noir);
+  color: var(--texte);
 }
 
 /* Vignette en attente de photo */
 .ph {
-  background-color: var(--beige-fonce);
+  background-color: var(--vignette);
   background-image: repeating-linear-gradient(
     135deg,
     transparent 0 14px,
-    rgba(7, 7, 7, 0.07) 14px 15px
+    color-mix(in srgb, var(--texte) 7%, transparent) 14px 15px
   );
 }
 

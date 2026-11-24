@@ -30,7 +30,7 @@ const mobile = await getImage({ src: posterMobile, format: 'webp', width: 780, q
     inset: 0;
     z-index: 0;
     overflow: hidden;
-    background: var(--noir);
+    background: var(--sombre);
   }
   img,
   canvas {
@@ -54,11 +54,11 @@ const mobile = await getImage({ src: posterMobile, format: 'webp', width: 780, q
     inset: 0;
     background: linear-gradient(
       to bottom,
-      #060606 0,
-      rgba(6, 6, 6, 0) 20%,
-      rgba(6, 6, 6, 0) 52%,
-      rgba(6, 6, 6, 0.85) 82%,
-      #060606 100%
+      var(--sombre) 0,
+      transparent 20%,
+      transparent 52%,
+      color-mix(in srgb, var(--sombre) 85%, transparent) 82%,
+      var(--sombre) 100%
     );
     pointer-events: none;
   }
@@ -67,12 +67,12 @@ const mobile = await getImage({ src: posterMobile, format: 'webp', width: 780, q
     .veil {
       background: linear-gradient(
         to bottom,
-        #060606 0,
-        #060606 14%,
-        rgba(6, 6, 6, 0) 30%,
-        rgba(6, 6, 6, 0) 55%,
-        rgba(6, 6, 6, 0.85) 80%,
-        #060606 100%
+        var(--sombre) 0,
+        var(--sombre) 14%,
+        transparent 30%,
+        transparent 55%,
+        color-mix(in srgb, var(--sombre) 85%, transparent) 80%,
+        var(--sombre) 100%
       );
     }
   }

@@ -48,6 +48,17 @@ const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : un
     <meta property="og:description" content={description} />
     <link rel="preload" href={titreFont} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={texteFont} as="font" type="font/woff2" crossorigin />
+    <script is:inline>
+      // Palette d'essai (?palette) : réapplique les couleurs testées avant
+      // l'affichage, pour éviter un flash. Aucun effet pour les visiteurs.
+      try {
+        var p = localStorage.getItem('fc-palette');
+        if (p) {
+          var c = JSON.parse(p);
+          for (var k in c) document.documentElement.style.setProperty(k, c[k]);
+        }
+      } catch (e) {}
+    </script>
     <slot name="head" />
   </head>
   <body>
@@ -71,6 +82,13 @@ const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : un
 
     <SiteFooter />
     <ScrollLine />
+    <script>
+      // Ouvre la palette d'essai si ?palette est dans l'adresse,
+      // ou si une palette est en cours d'essai dans ce navigateur.
+      if (new URLSearchParams(location.search).has('palette') || localStorage.getItem('fc-palette')) {
+        import('../scripts/palette').then((m) => m.ouvrirPalette());
+      }
+    </script>
   </body>
 </html>
 
@@ -89,7 +107,7 @@ const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : un
     grid-column: 1;
     position: relative;
     overflow: hidden;
-    background: var(--noir);
+    background: var(--sombre);
   }
   .page > :global(.site-header) {
     grid-row: 1;
@@ -119,7 +137,7 @@ const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : un
       grid-row: 1;
     }
     .masthead-content {
-      background: var(--noir);
+      background: var(--sombre);
     }
   }
 </style>
