@@ -19,11 +19,17 @@ const dateFacultative = () => z.preprocess(vide, z.coerce.date().optional());
 /** Une photo : soit un simple chemin, soit { image, description }. */
 const photo = ({ image }: SchemaContext) =>
   z.union([
-    image().transform((img) => ({ image: img, description: undefined as string | undefined })),
+    image().transform((img) => ({
+      image: img,
+      description: undefined as string | undefined,
+      taille: 'normale' as 'normale' | 'large' | 'pleine',
+    })),
     z.object({
       image: image(),
       /** Décrit la photo pour les personnes qui ne la voient pas. */
       description: texte(),
+      /** normale, large (deux colonnes) ou pleine (toute la largeur) */
+      taille: z.preprocess(vide, z.enum(['normale', 'large', 'pleine']).default('normale')),
     }),
   ]);
 
@@ -37,10 +43,49 @@ const photos = (ctx: SchemaContext) =>
     z.array(photo(ctx)),
   );
 
+/**
+ * Sections : blocs empilés sous le texte principal (comme dans Notion).
+ * Le champ « type » indique la sorte de bloc (enregistré ainsi par Pages CMS).
+ */
+const aImage = (b: unknown) => !!(b && typeof b === 'object' && (b as { image?: unknown }).image);
+const sections = ({ image }: SchemaContext) =>
+  z.preprocess(
+    (v) =>
+      (Array.isArray(v) ? v : []).filter((b) => {
+        if (!b || typeof b !== 'object' || !('type' in b)) return false;
+        if (b.type === 'image') return aImage(b);
+        if (b.type === 'galerie') return Array.isArray((b as { images?: unknown }).images);
+        return true;
+      }),
+    z.array(
+      z.discriminatedUnion('type', [
+        z.object({ type: z.literal('texte'), texte: texte() }),
+        z.object({
+          type: z.literal('image'),
+          image: image(),
+          description: texte(),
+          legende: texte(),
+          taille: z.preprocess(vide, z.enum(['petite', 'moyenne', 'grande', 'pleine']).default('moyenne')),
+          alignement: z.preprocess(vide, z.enum(['gauche', 'centre', 'droite']).default('gauche')),
+        }),
+        z.object({
+          type: z.literal('galerie'),
+          images: z.preprocess(
+            (v) => (Array.isArray(v) ? v.filter(aImage) : []),
+            z.array(z.object({ image: image(), description: texte() })),
+          ),
+          colonnes: z.preprocess(vide, z.coerce.number().int().min(2).max(4).default(3)),
+        }),
+        z.object({ type: z.literal('media'), lien: texte(), titre: texte() }),
+        z.object({ type: z.literal('citation'), texte: texte(), auteur: texte() }),
+      ]),
+    ),
+  );
+
 /** Pages de texte (À propos, mentions légales…) : src/content/pages/*.md */
 const pages = defineCollection({
   loader: glob({ pattern: '*.md', base: './src/content/pages' }),
-  schema: z.object({
+  schema: (ctx) => z.object({
     titre: z.string(),
     description: texte(),
     /** Phrase d'accroche affichée en gros au-dessus du texte. */
@@ -57,6 +102,7 @@ const pages = defineCollection({
     ),
     /** Ordre d'affichage dans le menu (petit nombre = en premier). */
     ordre: z.preprocess(vide, z.coerce.number().optional()),
+    sections: sections(ctx),
   }),
 });
 
@@ -81,6 +127,7 @@ const evenements = defineCollection({
       photos: photos(ctx),
       /** true = caché sur le site (pour préparer un événement à l'avance). */
       brouillon: z.preprocess(vide, z.boolean().default(false)),
+      sections: sections(ctx),
     }),
 });
 
@@ -94,7 +141,7 @@ export const CATEGORIES = {
 /** Productions : src/content/productions/*.md */
 const productions = defineCollection({
   loader: glob({ pattern: MD, base: './src/content/productions' }),
-  schema: ({ image }) =>
+  schema: (ctx) =>
     z.object({
       titre: z.string(),
       /** podcast, documentaire ou evenements */
@@ -104,11 +151,12 @@ const productions = defineCollection({
       /** Une phrase de présentation, affichée dans la liste. */
       resume: texte(),
       /** Image de présentation (facultative). */
-      image: z.preprocess(vide, image().optional()),
+      image: z.preprocess(vide, ctx.image().optional()),
       image_description: texte(),
       /** Lien Vimeo, YouTube, SoundCloud ou Spotify : le lecteur s'affiche sur la page. */
       media: texte(),
       brouillon: z.preprocess(vide, z.boolean().default(false)),
+      sections: sections(ctx),
     }),
 });
 

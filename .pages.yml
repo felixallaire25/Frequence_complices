@@ -8,6 +8,99 @@ media:
   categories: [image]
   rename: safe
 
+components:
+  # Blocs empilés sous le texte principal (page, événement, production)
+  sections:
+    label: Sections (images, galeries, vidéos, citations…)
+    type: block
+    list: true
+    blockKey: type
+    blocks:
+      - name: texte
+        label: Texte
+        fields:
+          - name: texte
+            label: Texte
+            type: rich-text
+            options:
+              format: markdown
+      - name: image
+        label: Image
+        fields:
+          - name: image
+            label: Image
+            type: image
+          - name: taille
+            label: Taille
+            type: select
+            default: moyenne
+            options:
+              values:
+                - name: petite
+                  label: Petite
+                - name: moyenne
+                  label: Moyenne (largeur du texte)
+                - name: grande
+                  label: Grande
+                - name: pleine
+                  label: Pleine largeur
+          - name: alignement
+            label: Alignement
+            type: select
+            default: gauche
+            options:
+              values:
+                - name: gauche
+                  label: À gauche
+                - name: centre
+                  label: Centré
+                - name: droite
+                  label: À droite
+          - name: legende
+            label: Légende (affichée sous l’image)
+            type: string
+          - name: description
+            label: Ce que montre l’image (lu aux personnes aveugles)
+            type: string
+      - name: galerie
+        label: Galerie de photos
+        fields:
+          - name: colonnes
+            label: Nombre de colonnes
+            type: select
+            default: "3"
+            options:
+              values: ["2", "3", "4"]
+          - name: images
+            label: Photos
+            type: object
+            list: true
+            fields:
+              - name: image
+                label: Photo
+                type: image
+              - name: description
+                label: Ce que montre la photo (lu aux personnes aveugles)
+                type: string
+      - name: media
+        label: Vidéo ou son (Vimeo, YouTube, SoundCloud, Spotify)
+        fields:
+          - name: lien
+            label: Lien
+            type: string
+          - name: titre
+            label: Titre (facultatif)
+            type: string
+      - name: citation
+        label: Citation
+        fields:
+          - name: texte
+            label: Citation
+            type: text
+          - name: auteur
+            label: Auteur·rice (facultatif)
+            type: string
+
 content:
   - name: evenements
     label: Événements
@@ -58,6 +151,18 @@ content:
           - name: description
             label: Ce que montre la photo (lu aux personnes aveugles)
             type: string
+          - name: taille
+            label: Taille dans la galerie
+            type: select
+            default: normale
+            options:
+              values:
+                - name: normale
+                  label: Normale
+                - name: large
+                  label: Large (deux colonnes)
+                - name: pleine
+                  label: Pleine largeur
       - name: brouillon
         label: Brouillon (caché du site)
         type: boolean
@@ -67,6 +172,8 @@ content:
         type: rich-text
         options:
           format: markdown
+      - name: sections
+        component: sections
 
   - name: productions
     label: Productions
@@ -124,6 +231,8 @@ content:
         type: rich-text
         options:
           format: markdown
+      - name: sections
+        component: sections
 
   - name: pages
     label: Pages (À propos, mentions légales…)
@@ -173,6 +282,8 @@ content:
         type: rich-text
         options:
           format: markdown
+      - name: sections
+        component: sections
 
   - name: reglages
     label: Réglages du site

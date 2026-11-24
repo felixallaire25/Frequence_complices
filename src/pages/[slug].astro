@@ -7,6 +7,7 @@
 import { getCollection, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import PageTitle from '../components/PageTitle.astro';
+import Sections from '../components/Sections.astro';
 
 export async function getStaticPaths() {
   const pages = await getCollection('pages');
@@ -28,6 +29,7 @@ const signature = page.data.signature?.split('/').map((l) => l.trim());
       <div class="prose">
         <Content />
       </div>
+      <Sections sections={page.data.sections} titre={page.data.titre} />
       {
         signature && (
           <p class="signature">
@@ -49,7 +51,8 @@ const signature = page.data.signature?.split('/').map((l) => l.trim());
     padding-block: 72px 112px;
   }
   .col {
-    margin-left: clamp(0px, 16vw, 240px);
+    --decalage: clamp(0px, 16vw, 240px);
+    margin-left: var(--decalage);
   }
   .lead {
     margin: 0 0 32px;

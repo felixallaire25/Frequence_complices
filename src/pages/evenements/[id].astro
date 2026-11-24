@@ -4,6 +4,7 @@ import { Image } from 'astro:assets';
 import { render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import PageTitle from '../../components/PageTitle.astro';
+import Sections from '../../components/Sections.astro';
 import { dateLongue, dernierJour, evenementsPublies } from '../../lib/evenements';
 
 export async function getStaticPaths() {
@@ -59,6 +60,7 @@ const lienValide = inscription && /^(https?:|mailto:)/.test(inscription);
     <div class="prose">
       <Content />
     </div>
+    <Sections sections={e.data.sections} titre={titre} />
   </section>
 
   {
@@ -67,12 +69,12 @@ const lienValide = inscription && /^(https?:|mailto:)/.test(inscription);
         <h2 class="h2" id="titre-photos">Photos</h2>
         <ul>
           {photos.map((p) => (
-            <li>
+            <li class={`taille-${p.taille}`}>
               <Image
                 src={p.image}
                 alt={p.description ?? ''}
-                widths={[500, 900, 1400]}
-                sizes="(min-width: 860px) 50vw, 100vw"
+                widths={p.taille === 'normale' ? [500, 900] : [500, 900, 1400, 2000]}
+                sizes={p.taille === 'normale' ? '(min-width: 860px) 50vw, 100vw' : '100vw'}
               />
             </li>
           ))}
@@ -126,6 +128,18 @@ const lienValide = inscription && /^(https?:|mailto:)/.test(inscription);
   .photos img {
     width: 100%;
     height: auto;
+  }
+  /* taille choisie dans le CMS */
+  .taille-large {
+    grid-column: span 2;
+  }
+  .taille-pleine {
+    grid-column: 1 / -1;
+  }
+  @media (max-width: 859px) {
+    .taille-large {
+      grid-column: auto;
+    }
   }
 </style>
 

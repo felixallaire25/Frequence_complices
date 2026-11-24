@@ -1,0 +1,185 @@
+---
+/**
+ * Affiche les « sections » ajoutées dans le CMS sous le texte principal :
+ * texte, image (taille et alignement au choix), galerie, vidéo/son, citation.
+ */
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import { marked } from 'marked';
+import MediaEmbed from './MediaEmbed.astro';
+
+type Bloc =
+  | { type: 'texte'; texte?: string }
+  | {
+      type: 'image';
+      image: ImageMetadata;
+      description?: string;
+      legende?: string;
+      taille: 'petite' | 'moyenne' | 'grande' | 'pleine';
+      alignement: 'gauche' | 'centre' | 'droite';
+    }
+  | { type: 'galerie'; images: { image: ImageMetadata; description?: string }[]; colonnes: number }
+  | { type: 'media'; lien?: string; titre?: string }
+  | { type: 'citation'; texte?: string; auteur?: string };
+
+interface Props {
+  sections: Bloc[];
+  /** Titre de la page (pour nommer les lecteurs vidéo/son). */
+  titre: string;
+}
+const { sections, titre } = Astro.props;
+
+// Les images insérées dans un bloc de texte pointent vers ../images/… :
+// on les remplace par les fichiers publiés du site.
+const images = import.meta.glob<ImageMetadata>('../content/images/*', { eager: true, import: 'default' });
+const parNom = new Map(Object.entries(images).map(([chemin, img]) => [chemin.split('/').pop()!, img.src]));
+const html = (md?: string) =>
+  (marked.parse(md ?? '', { async: false }) as string).replace(
+    /src="(?:\.\.\/)?images\/([^"]+)"/g,
+    (m, nom) => (parNom.has(nom) ? `src="${parNom.get(nom)}" loading="lazy"` : m),
+  );
+
+const largeurs = { petite: 360, moyenne: 680, grande: 980, pleine: 1600 } as const;
+---
+
+{
+  sections.length > 0 && (
+    <div class="sections">
+      {sections.map((b) => {
+        if (b.type === 'texte') return <div class="prose" set:html={html(b.texte)} />;
+        if (b.type === 'image')
+          return (
+            <figure class:list={['bloc-image', `taille-${b.taille}`, `align-${b.alignement}`]}>
+              <Image
+                src={b.image}
+                alt={b.description ?? ''}
+                widths={[400, 800, 1200, 1800].filter((w) => w <= largeurs[b.taille] * 2)}
+                sizes={b.taille === 'pleine' ? '100vw' : `(min-width: ${largeurs[b.taille]}px) ${largeurs[b.taille]}px, 100vw`}
+              />
+              {b.legende && <figcaption>{b.legende}</figcaption>}
+            </figure>
+          );
+        if (b.type === 'galerie')
+          return (
+            <ul class="galerie" style={`--colonnes:${b.colonnes}`}>
+              {b.images.map((p) => (
+                <li>
+                  <Image
+                    src={p.image}
+                    alt={p.description ?? ''}
+                    widths={[400, 700, 1000]}
+                    sizes={`(min-width: 860px) ${Math.round(100 / b.colonnes)}vw, 50vw`}
+                  />
+                </li>
+              ))}
+            </ul>
+          );
+        if (b.type === 'media' && b.lien) return <MediaEmbed url={b.lien} titre={b.titre ?? titre} />;
+        if (b.type === 'citation' && b.texte)
+          return (
+            <blockquote class="citation">
+              <p>{b.texte}</p>
+              {b.auteur && <cite>{b.auteur}</cite>}
+            </blockquote>
+          );
+        return null;
+      })}
+    </div>
+  )
+}
+
+<style>
+  .sections {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    margin-top: 48px;
+  }
+  .sections > :global(.prose) {
+    margin: 0;
+  }
+
+  /* Image : taille et alignement */
+  .bloc-image {
+    margin: 0;
+  }
+  .bloc-image :global(img) {
+    width: 100%;
+    height: auto;
+  }
+  .taille-petite {
+    max-width: 360px;
+  }
+  .taille-moyenne {
+    max-width: 680px;
+  }
+  .taille-grande {
+    max-width: 980px;
+  }
+  /* pleine largeur : déborde de la colonne de texte si elle est décalée */
+  .taille-pleine {
+    max-width: none;
+    margin-left: calc(-1 * var(--decalage, 0px));
+    width: calc(100% + var(--decalage, 0px));
+  }
+  .align-centre {
+    margin-inline: auto;
+  }
+  .align-droite {
+    margin-left: auto;
+  }
+  figcaption {
+    margin-top: 10px;
+    font-size: 17px;
+    color: var(--texte-2);
+  }
+
+  /* Galerie */
+  .galerie {
+    display: grid;
+    grid-template-columns: repeat(var(--colonnes, 3), minmax(0, 1fr));
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .galerie :global(img) {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+  }
+  @media (max-width: 699px) {
+    .galerie {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  /* Citation */
+  .citation {
+    margin: 0;
+    max-width: 30ch;
+  }
+  .citation p::before {
+    content: '« ';
+  }
+  .citation p::after {
+    content: ' »';
+  }
+  .citation p {
+    margin: 0;
+    font-family: var(--f-titre);
+    font-weight: 500;
+    font-size: clamp(26px, 2.8vw, 38px);
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+  }
+  .citation cite {
+    display: block;
+    margin-top: 14px;
+    font-style: normal;
+    font-family: var(--f-date);
+    font-size: 17px;
+    color: var(--texte-2);
+  }
+</style>

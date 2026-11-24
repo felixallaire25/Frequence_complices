@@ -53,6 +53,24 @@ Dans un événement, rubrique **Photos** → **Add** (ajouter une ligne) :
 
 La **première photo** sert de vignette dans la liste des événements passés.
 
+Chaque photo a une **Taille dans la galerie** : normale, large (deux
+colonnes) ou pleine largeur.
+
+## Mettre en page avec des sections
+
+Sous le texte principal d’une page, d’un événement ou d’une production,
+la rubrique **Sections** permet d’empiler des blocs (bouton **Add**) :
+
+- **Texte** : un nouveau paragraphe de texte riche ;
+- **Image** : choisissez la **taille** (petite, moyenne, grande, pleine
+  largeur), l’**alignement** et une légende ;
+- **Galerie de photos** : plusieurs photos en 2, 3 ou 4 colonnes ;
+- **Vidéo ou son** : un lien Vimeo, YouTube, SoundCloud ou Spotify ;
+- **Citation** : une phrase mise en avant, avec son auteur·rice.
+
+Les blocs s’affichent dans l’ordre de la liste ; faites-les glisser pour
+les réorganiser.
+
 ## Ajouter un lien
 
 - **Inscription** à un événement : champ « Lien d’inscription ».

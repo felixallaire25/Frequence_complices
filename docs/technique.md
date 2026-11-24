@@ -118,6 +118,9 @@ sur la branche ouverte (doit être `main`, la branche publiée).
   (`''`, `null`) que le CMS peut enregistrer.
 - Réglages (e-mail, adresse, clé Web3Forms) : `src/data/site.json`.
 - Toute nouvelle page de la rubrique « Pages » devient `/<nom-du-fichier>/`.
+- Sections (blocs Pages CMS `type: block`, clé `type`) : composant
+  `sections` dans `.pages.yml`, schéma `sections()` dans
+  `src/content.config.ts`, rendu par `src/components/Sections.astro`.
 - Menu : champs `menu` (principal, ou clé d'une rubrique pour un sous-menu)
   et `ordre` des pages ; assemblé par `src/lib/menu.ts`.
 - À la transition : réinstaller l'application sur le compte de l'association
