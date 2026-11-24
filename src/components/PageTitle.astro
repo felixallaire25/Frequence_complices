@@ -1,24 +1,27 @@
 ---
-/** Bandeau noir des pages intérieures : bande d'ondes + grand titre. */
-import WaveBand from './WaveBand.astro';
-
+/**
+ * Bandeau des pages intérieures : grand titre, autour duquel des lignes
+ * d'ondes colorées viennent se serrer à l'arrivée (src/scripts/lignes.ts).
+ */
 interface Props {
   title: string;
-  seed?: number;
   /** Titre plus petit, pour les titres longs (événements, productions). */
   small?: boolean;
 }
-const { title, seed = 1, small = false } = Astro.props;
+const { title, small = false } = Astro.props;
 ---
 
-<WaveBand seed={seed} height={170} />
-<div class="wrap title">
-  <h1 class:list={['h1-page', { small }]}>{title}</h1>
+<div class="wrap title" data-lignes="page" data-lignes-nombre="18">
+  <h1 class:list={['h1-page', { small }]} data-lignes-titre>{title}</h1>
 </div>
+
+<script>
+  import '../scripts/lignes';
+</script>
 
 <style>
   .title {
-    padding-block: 8px 48px;
+    padding-block: clamp(88px, 11vw, 150px) 48px;
   }
   .small {
     font-size: clamp(44px, 6.5vw, 96px);

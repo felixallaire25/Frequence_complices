@@ -15,12 +15,11 @@ export async function getStaticPaths() {
 const { p } = Astro.props;
 const { Content } = await render(p);
 const { titre, categorie, resume, image, image_description, media } = p.data;
-const seed = [...p.id].reduce((s, c) => s + c.charCodeAt(0), 0);
 const date = dateProduction(p);
 ---
 
 <Base title={titre} current="productions" description={resume ?? `${CATEGORIES[categorie]} — ${titre}`}>
-  <PageTitle slot="masthead" title={titre} seed={seed} small />
+  <PageTitle slot="masthead" title={titre} small />
 
   <section class="wrap bloc">
     <p class="retour"><a href={`/productions/#${categorie}`}>← Productions</a></p>

@@ -16,16 +16,16 @@ import HeroShader from '../components/HeroShader.astro';
 
   <section class="wrap sections">
     <nav aria-label="Sections du site">
-      <a class="row" href="/a-propos/">
-        <span class="rt">À propos</span>
+      <a class="row" data-lignes="survol" href="/a-propos/">
+        <span class="rt" data-lignes-titre>À propos</span>
         <span class="rm">Notre manifeste</span>
       </a>
-      <a class="row" href="/evenements/">
-        <span class="rt">Événements</span>
+      <a class="row" data-lignes="survol" href="/evenements/">
+        <span class="rt" data-lignes-titre>Événements</span>
         <span class="rm">Dates à venir et éditions passées</span>
       </a>
-      <a class="row" href="/productions/">
-        <span class="rt">Productions</span>
+      <a class="row" data-lignes="survol" href="/productions/">
+        <span class="rt" data-lignes-titre>Productions</span>
         <span class="rm">Podcast, documentaire, événements</span>
       </a>
     </nav>
@@ -33,7 +33,7 @@ import HeroShader from '../components/HeroShader.astro';
 </Base>
 
 <script>
-  import '../scripts/lignes-titres';
+  import '../scripts/lignes';
 </script>
 
 <style>
@@ -90,19 +90,10 @@ import HeroShader from '../components/HeroShader.astro';
       background-color 0.2s,
       color 0.2s;
   }
-  /* Lignes qui épousent le titre au survol (src/scripts/lignes-titres.ts) */
+  /* Lignes qui épousent le titre au survol (src/scripts/lignes.ts) */
   .row {
-    position: relative;
     overflow: hidden;
   }
-  .row :global(.row-lines) {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-  }
-  .rt,
   .rm {
     position: relative;
   }

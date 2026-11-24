@@ -15,11 +15,10 @@ const { e } = Astro.props;
 const { Content } = await render(e);
 const { titre, heure, lieu, inscription, photos } = e.data;
 const lienValide = inscription && /^(https?:|mailto:)/.test(inscription);
-const seed = [...e.id].reduce((s, c) => s + c.charCodeAt(0), 0);
 ---
 
 <Base title={titre} current="evenements" description={`${titre}, ${dateLongue(e)}${lieu ? `, ${lieu}` : ''}.`}>
-  <PageTitle slot="masthead" title={titre} seed={seed} small />
+  <PageTitle slot="masthead" title={titre} small />
 
   <section class="wrap bloc">
     <p class="retour"><a href="/evenements/">← Tous les événements</a></p>

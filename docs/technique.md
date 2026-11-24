@@ -26,8 +26,10 @@ src/
     images/              photos (optimisées au build par astro:assets)
   data/site.ts           nom, e-mail, adresse, clé Web3Forms, navigation
   layouts/Base.astro     gabarit commun (head, bandeau noir, pied de page)
-  components/            HeroShader, WaveBand, MediaEmbed, cartes…
+  components/            HeroShader, ScrollLine, MediaEmbed, cartes…
   scripts/hero-shader.ts animation WebGL de l'accueil (OGL)
+  scripts/lignes.ts      lignes qui épousent les titres (accueil, pages, cartes)
+  scripts/palette.ts     palette d'essai des couleurs (ajouter ?palette à l'adresse)
   styles/global.css      couleurs, typographie, styles partagés
   assets/hero/           images fixes de repli du hero
 public/_headers          en-têtes HTTP Cloudflare (cache, sécurité)

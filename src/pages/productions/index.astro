@@ -2,7 +2,6 @@
 import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import PageTitle from '../../components/PageTitle.astro';
-import WaveBand from '../../components/WaveBand.astro';
 import { CATEGORIES, dateProduction, productionsPubliees, type Categorie } from '../../lib/productions';
 
 const toutes = await productionsPubliees();
@@ -10,7 +9,6 @@ const categories = (Object.keys(CATEGORIES) as Categorie[]).map((cle, i) => ({
   cle,
   nom: CATEGORIES[cle],
   items: toutes.filter((p) => p.data.categorie === cle),
-  seed: 11 + i * 7,
 }));
 const compte = (n: number) => (n > 1 ? `${n} productions` : '1 production');
 ---
@@ -20,16 +18,15 @@ const compte = (n: number) => (n > 1 ? `${n} productions` : '1 production');
   current="productions"
   description="Les productions de Fréquences Complices : podcast, documentaire, événements."
 >
-  <PageTitle slot="masthead" title="Productions" seed={4} />
+  <PageTitle slot="masthead" title="Productions" />
 
   <section class="wrap cartes" aria-label="Catégories">
     {
       categories.map((c) => {
         const Tag = c.items.length ? 'a' : 'article';
         return (
-          <Tag class="carte" href={c.items.length ? `#${c.cle}` : undefined}>
-            <WaveBand seed={c.seed} height={260} lines={9} class="carte-ondes" />
-            <h2>{c.nom}</h2>
+          <Tag class="carte" href={c.items.length ? `#${c.cle}` : undefined} data-lignes="page" data-lignes-nombre="16">
+            <h2 data-lignes-titre>{c.nom}</h2>
             <p>{c.items.length ? compte(c.items.length) : 'Bientôt'}</p>
           </Tag>
         );
@@ -58,9 +55,7 @@ const compte = (n: number) => (n > 1 ? `${n} productions` : '1 production');
                       class="vignette"
                     />
                   ) : (
-                    <div class="vignette vignette-vide">
-                      <WaveBand seed={[...p.id].reduce((n, ch) => n + ch.charCodeAt(0), 0)} height={200} lines={7} />
-                    </div>
+                    <div class="vignette vignette-vide" data-lignes="page" data-lignes-nombre="12" />
                   )}
                   <span class="titre">{p.data.titre}</span>
                   {dateProduction(p) && <span class="meta">{dateProduction(p)}</span>}
@@ -74,6 +69,10 @@ const compte = (n: number) => (n > 1 ? `${n} productions` : '1 production');
   }
   <div class="fin" aria-hidden="true"></div>
 </Base>
+
+<script>
+  import '../../scripts/lignes';
+</script>
 
 <style>
   .cartes {
@@ -94,12 +93,7 @@ const compte = (n: number) => (n > 1 ? `${n} productions` : '1 production');
     overflow: hidden;
     text-decoration: none;
   }
-  .carte :global(.carte-ondes) {
-    position: absolute;
-    inset: 0 0 auto 0;
-  }
   .carte h2 {
-    position: relative;
     margin: 0;
     font-family: var(--f-titre);
     font-weight: 600;
