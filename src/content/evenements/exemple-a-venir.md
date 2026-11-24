@@ -1,9 +1,12 @@
 ---
-titre: "[Titre de l’événement]"
+titre: Test Event felix
 date: 2026-12-31
-heure: "[heure]"
-lieu: "[Lieu]"
-inscription: https://example.org  # [LIEN D’INSCRIPTION]
+fin: 2026-11-24
+heure: 20h15
+lieu: bois de boulogne
+inscription: https://example.org
+photos:
+  - image: ../images/b4314f52e465f20ea2ba26bf04cab729.jpg
+brouillon: false
 ---
-
-[Description de l’événement : programme, artistes, tarifs…]
+test de création d'evenement pas page cms 
